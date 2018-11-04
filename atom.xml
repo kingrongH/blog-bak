@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Kingrong&#39;s Blog</title>
+  <icon>https://www.gravatar.com/avatar/5c9b0550374b2b8d9a9118de88f5b71a</icon>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://www.kingr.top/"/>
+  <updated>2018-11-04T05:13:59.866Z</updated>
+  <id>http://www.kingr.top/</id>
+  
+  <author>
+    <name>Kingrong</name>
+    <email>Kingronghuang@gmail.com</email>
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>arch 不能挂载root(You are now being dropped into an emergency shell)</title>
+    <link href="http://www.kingr.top/2018/11/04/arch-cant-mount-root/"/>
+    <id>http://www.kingr.top/2018/11/04/arch-cant-mount-root/</id>
+    <published>2018-11-04T04:38:23.000Z</published>
+    <updated>2018-11-04T05:13:59.866Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>这两天很高兴的给自己的新t480装上了arch，将以前的数据移植过来之后在里面快乐的玩耍，结果这天忽然之间更新（<code>pacman -Syu</code>）之后，一切都不一样了。电脑开始卡顿，很多应用开始闪退。不久之后，只能看到黑屏。</p><p>然后重启</p><p>然后gg</p><pre><code>mount /new_root: unknown filesystem type &apos;ext4&apos;You are now being dropped into an emergency shell</code></pre><h1 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h1><p>和之前安装arch的时候一样，先到Windows刻录一个arch安装硬盘</p><p>然后挂载好root盘和boot盘，<code>arch-chroot</code>进到自己的arch中，然后执行<code>pacman -Syu mkinitcpio systemd-tools linux</code></p><p>命令如下</p><pre><code># mount /dev/sdxY /mnt         #Your root partition.# mount /dev/sdxZ /mnt/boot    #If you use a separate /boot partition.# arch-chroot /mnt# pacman -Syu mkinitcpio systemd-tools linux</code></pre><h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p>这次出现问题的原因大概是滚动更新滚挂了自己的系统内核。以后更新的时候一定要小心一点，不要在系统不稳定的时候进行更新。</p><p>arch的官方文档是十分有用处的。</p><hr><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://wiki.archlinux.org/index.php/pacman" title="Pacman" target="_blank" rel="noopener">arch pacman 文档</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h1&gt;&lt;p&gt;这两天很高兴的给自己的新t480装上了arch，将以前的数据移植过来之后在里面快乐的玩耍，结果这天忽然之间更新（&lt;code&gt;
+      
+    
+    </summary>
+    
+      <category term="Arch" scheme="http://www.kingr.top/categories/Arch/"/>
+    
+    
+      <category term="arch" scheme="http://www.kingr.top/tags/arch/"/>
+    
+      <category term="root" scheme="http://www.kingr.top/tags/root/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python版ssr通过链接导入节点</title>
+    <link href="http://www.kingr.top/2018/10/08/python-ssr-rss/"/>
+    <id>http://www.kingr.top/2018/10/08/python-ssr-rss/</id>
+    <published>2018-10-08T10:45:12.000Z</published>
+    <updated>2018-10-09T11:10:27.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h1><p>很多时候我们都苦于使用python版本的ssr的时候必须自己手动写入配置，所以这一次我们将使用python来进行ssr解析并导入配置。在这一节中我们需要用到许多上一节的内容，所以我建议各位看官，先移步<a href="https://www.kingr.top/2018/10/07/ssr-decode/">ssr和ss链接解密</a></p><p>本节所有代码都可以在我的<a href="https://github.com/kingrongH/shadowsocksr/tree/manyuser/shadowsocks/RSS" target="_blank" rel="noopener">github</a>中找到。</p><h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><p>首先我们需要知道ssr或者ss的链接是怎样加密的，在前一节中我们解析了ssr链接的加密过程，我们知道了ssr链接是通过<code>Base64</code>的编码方式进行加密的。所以在这一次试验中我们需要用到的主要的库就是<code>base64</code>和<code>re</code>，这两个库一般linux的python环境中都自动安装了，如果你出现了<code>no module nameed ***</code>的问题，那么可以使用<code>pip</code>安装一下。</p><pre><code>import base64import reimport json</code></pre><h1 id="解码"><a href="#解码" class="headerlink" title="解码"></a>解码</h1><p>在上一节中我们使用的在线的<code>Base64</code>解码工具进行解码的，这一次我们需要使用Python的<code>base64</code>这个库，官方使用文档在此：<a href="https://docs.python.org/3/library/base64.html" target="_blank" rel="noopener">Base64官方文档</a>。这个库的使用方式十分简单，我们一般会使用到的是这个库的两个函数：<code>url_safe_base64decode(s)</code>和<code>base64_decode(s)</code>，传入我们需要解码的对象，然后返回的是解码后的<code>byte</code>类型的字符。</p><p>在这里我们需要特别注意的是我们传入的s的长度必须为4的倍数，这一点在上一节中我们实际上已经谈到过了。不再多说直接上代码</p><pre><code>def decoe(s):  num = len(s)%4  if num==0:    s = base64.url_safe_base64decode(s)  else:    s = s + &apos;#&apos;*(4-num)    s = base64.url_safe_base64decode(s)    return s</code></pre><p>这样一个简单的base64 针对url的解码函数就出炉了，因为我们的ssr链接是需要使用在浏览器地址栏的，所以我们需要使用针对url的函数。</p><h1 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h1><p>完成了解码函数之后我们需要对我们的ssr链接进行解析了。我们需要得到的是一个由配置组成的字典例如：</p><pre><code>config = {    &quot;server&quot;: &quot;0.0.0.0&quot;,    &quot;server_ipv6&quot;: &quot;::&quot;,    &quot;server_port&quot;: 8388,    &quot;local_address&quot;: &quot;127.0.0.1&quot;,    &quot;local_port&quot;: 1080,    &quot;password&quot;: &quot;m&quot;,    &quot;method&quot;: &quot;aes-128-ctr&quot;,    &quot;protocol&quot;: &quot;auth_aes128_md5&quot;,    &quot;protocol_param&quot;: &quot;&quot;,    &quot;obfs&quot;: &quot;tls1.2_ticket_auth_compatible&quot;,    &quot;obfs_param&quot;: &quot;&quot;}</code></pre><p>利用解码函数我们可以得到我们的每一个参数，然后存入字典中，参照上一节的文档我们需要对这个链接进行多次解码，代码如下：</p><pre><code>def Analyze(s):     config = {    &quot;server&quot;: &quot;0.0.0.0&quot;,    &quot;server_ipv6&quot;: &quot;::&quot;,    &quot;server_port&quot;: 8388,    &quot;local_address&quot;: &quot;127.0.0.1&quot;,    &quot;local_port&quot;: 1080,    &quot;password&quot;: &quot;m&quot;,    &quot;method&quot;: &quot;aes-128-ctr&quot;,    &quot;protocol&quot;: &quot;auth_aes128_md5&quot;,    &quot;protocol_param&quot;: &quot;&quot;,    &quot;obfs&quot;: &quot;tls1.2_ticket_auth_compatible&quot;,    &quot;obfs_param&quot;: &quot;&quot;  }  #第一次解码  s = decode(s)  spilted = re.spilt(&apos;:&apos;,s)  #将多个参数分离开来  pass_param = spilted[5]  pass_param_spilted = re.spilt(&apos;\/\?&apos;,pass_param)  passwd = decode(pass_param_spilted[0]) #解码得到password  #匹配param、remarks和group  try:    obfs_param = re.search(r&apos;obfsparam=([^&amp;]+)&apos;,pass_param_spilted[1]).group[1]  except:    obfs_param=&quot;&quot;  try:    protocol_param = re.search(r&apos;protoparam=([^&amp;]+)&apos;, pass_param_spilted[1])    protocol_param = decode(protocol_param)  except:    protocol_param = &apos;&apos;  try:    remarks = re.search(r&apos;remarks=([^&amp;]+)&apos;, pass_param_spilted[1]).group(1)    remarks = decode(remarks)  except:    remarks = &apos;&apos;  try:    group = re.search(r&apos;group=([^&amp;]+)&apos;, pass_param_spilted[1]).group(1)    group = decode(group)  except:    group = &apos;&apos;    #将各个值赋值入字典中  config[&apos;server&apos;] = spilted[0]  config[&apos;server_port&apos;] = int(spilted[1])  config[&apos;password&apos;] = passwd  config[&apos;method&apos;] = spilted[3]  config[&apos;protocol&apos;] = spilted[2]  config[&apos;obfs&apos;] = spilted[4]  config[&apos;protocol_param&apos;] = protocol_param  config[&apos;obfs_param&apos;] = obfs_param  return [config,group,remarks]</code></pre><p>这些代码大致还原了我们在上一节中使用在线工具解析的过程，其中我们可以看见，在匹配参数的过程中我们一直在使用<code>try...except...</code>，这是因为并不是所有的ssr链接中都包含了这些信息，如果不包含，我们就可以将它赋值为空文本。</p><h1 id="保存配置"><a href="#保存配置" class="headerlink" title="保存配置"></a>保存配置</h1><p>在python版本的ssr的使用中我们一般是使用<code>python local.py -c ***.json -d start</code> 命令来完成ssr的启动的。所以我们为了便捷和进一步开发的需要需要将我们的配置保存为<code>*.json</code>，使用<code>json</code>库，<a href="https://docs.python.org/3/library/json.html" target="_blank" rel="noopener">官方文档</a></p><pre><code>def save_as_json(d,name=&apos;conf&apos;):  #直接调用解析函数  [data_dict,group,remarks] = Analyze(d)  json_str = json.dumps(data_dict)  #保存在config目录下  with open(&apos;config/&apos;+naem+&apos;.json&apos;,&apos;w&apos;) as f:    json.dump(data_dict,f)</code></pre><h1 id="综合利用"><a href="#综合利用" class="headerlink" title="综合利用"></a>综合利用</h1><p>我们直接使用在终端输入的方式来获取ssr链接，然后进一步进行解析保存到相应的目录下，这里需要注意一点就是我们的所有使用的ssr code 都是去除了<code>ssr://</code>前缀的。</p><pre><code>if __name__ == &quot;__main__&quot;:  ssr = input(&apos;ssr link:&apos;)  code = ssr[6:]  name = input(&apos;config name:&apos;)  try:      save_as_json(code,name)      print(&quot;Successful:please check config at \&apos;config/\&apos;&quot;)  except:      print(&quot;Error:Fail to save config!&quot;)</code></pre><h1 id="更进一步"><a href="#更进一步" class="headerlink" title="更进一步"></a>更进一步</h1><p>将这一切做好之后，我们将获得一个可以通过ssr链接导入节点配置的程序，然而在使用过程中还是稍显麻烦，我觉得主要有以下几点值得进一步地探索：</p><ul><li>文件的名字还是自定义的，能不能通过我们获得的group和remarks信息完成对保存的名字和文件夹的自动设定呢</li><li>能不能进一步完成ssr的订阅功能呢，像其他客户端一样。</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;关于&quot;&gt;&lt;a href=&quot;#关于&quot; class=&quot;headerlink&quot; title=&quot;关于&quot;&gt;&lt;/a&gt;关于&lt;/h1&gt;&lt;p&gt;很多时候我们都苦于使用python版本的ssr的时候必须自己手动写入配置，所以这一次我们将使用python来进行ssr解析并导入配置。在这一
+      
+    
+    </summary>
+    
+      <category term="Shadowsocksr" scheme="http://www.kingr.top/categories/Shadowsocksr/"/>
+    
+    
+      <category term="shadowsocksr" scheme="http://www.kingr.top/tags/shadowsocksr/"/>
+    
+      <category term="shadowsocks" scheme="http://www.kingr.top/tags/shadowsocks/"/>
+    
+      <category term="翻越长城" scheme="http://www.kingr.top/tags/%E7%BF%BB%E8%B6%8A%E9%95%BF%E5%9F%8E/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ssr和ss链接解码(decode)</title>
+    <link href="http://www.kingr.top/2018/10/07/ssr-decode/"/>
+    <id>http://www.kingr.top/2018/10/07/ssr-decode/</id>
+    <published>2018-10-07T00:48:01.000Z</published>
+    <updated>2018-10-07T02:14:58.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h1><p>我们所熟知的翻墙工具<code>Shadowsocksr</code>和<code>Shadowocks</code>都有可以直接通过链接导入节点配置的功能。那么它们到底是怎么从ssr或者ss链接的一堆乱码中提取出节点信息的呢？</p><h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>实际上无论是<code>ssr</code>或者<code>ss</code>链接都是，经过多次<code>[Base64](https://zh.wikipedia.org/wiki/Base64 ’Base64‘)</code>编码方式进行加密的，这种加密方式无法起到真正的加密的效果，正所谓<code>防君子不防小人</code>。</p><p>由于Base64解码后含有<code>+</code>、<code>/</code>等url敏感字符所以在针对url的Base64编码中，会将<code>/</code>改为<code>_</code>，将<code>+</code>改为<code>-</code>。Base64所解码的字符个数必须是4的倍数，不足四的倍数的需要在字符末尾添加<code>#</code>补全为4的倍数。</p><p><code>ssr</code> 的编码方式就是采用针对url的Base64编码(UrlBase64Encode)的，在解码过程中我发现，ssr加密前的格式是</p><pre><code>server:server_port:protocol:method:obfs:password/?obfsparam=obfs_param&amp;protoparam=protocol_param&amp;remarks=remarks&amp;group=group</code></pre><p>其中<code>password</code>及之后的<code>obfs_param</code>等参数都需要进一步的解码的，并且<code>obfs_param</code>及之后的参数在不同的节点中可能是非必须的。</p><h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>本次测试采用<a href="https://doub.io/sszhfx/" target="_blank" rel="noopener">逗比根据地</a>分享的免费帐号。测试工具采用<a href="http://tool.oschina.net/encrypt?type=3" target="_blank" rel="noopener">开源中国在线工具</a>。链接如下：</p><pre><code>ssr://NDUuNjIuMjM4LjE0Nzo1NjA1OmF1dGhfc2hhMV92NDpjaGFjaGEyMDp0bHMxLjJfdGlja2V0X2F1dGg6Wkc5MVlpNXBieTl6YzNwb1puZ3ZLalUyTURVLz9yZW1hcmtzPTVweXM1WVdONkxTNTZMU201WS0zNXAybDZJZXFPbVJ2ZFdJdWFXOHZjM042YUdaNEx3</code></pre><p>去除<code>ssr://</code>前缀之后，解码结果如下</p><pre><code>45.62.238.147:5605:auth_sha1_v4:chacha20:tls1.2_ticket_auth:ZG91Yi5pby9zc3poZngvKjU2MDU/?remarks=5pys5YWN6LS56LSm5Y-35p2l6IeqOmRvdWIuaW8vc3N6aGZ4Lw</code></pre><p><img src="https://i.loli.net/2018/10/07/5bb96788bf5a7.png" alt="ssr_decode1.png" title="ssr decode"></p><p>这里不包含混淆参数和协议参数等，我们只需要对<code>password</code>和<code>remarks</code>进行单独解码：</p><p>  <img src="https://i.loli.net/2018/10/07/5bb96884374a5.png" alt="password" title="password"></p><p>  <img src="https://i.loli.net/2018/10/07/5bb968f07d86d.png" alt="remarks" title="remarks"></p><p>其中我们可以注意到<code>remarks</code>这一项中包含一个<code>-</code>，我们需要将它改成<code>+</code>才能解码成功。</p><h1 id="想法"><a href="#想法" class="headerlink" title="想法"></a>想法</h1><p>在linux环境下使用python 版本ssr翻越长城的方式是十分不方便的，我们还是得必须自己将节点配置添加到json文件中，有没有可能像windows、ios等其他客户端一样通过ssr链接导入节点配置呢。</p><p>在下一节中我们将使用python来实现这个代码。 </p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;关于&quot;&gt;&lt;a href=&quot;#关于&quot; class=&quot;headerlink&quot; title=&quot;关于&quot;&gt;&lt;/a&gt;关于&lt;/h1&gt;&lt;p&gt;我们所熟知的翻墙工具&lt;code&gt;Shadowsocksr&lt;/code&gt;和&lt;code&gt;Shadowocks&lt;/code&gt;都有可以直接通过链接导
+      
+    
+    </summary>
+    
+      <category term="Shadowsocksr" scheme="http://www.kingr.top/categories/Shadowsocksr/"/>
+    
+    
+      <category term="shadowsocksr" scheme="http://www.kingr.top/tags/shadowsocksr/"/>
+    
+      <category term="shadowsocks" scheme="http://www.kingr.top/tags/shadowsocks/"/>
+    
+      <category term="翻越长城" scheme="http://www.kingr.top/tags/%E7%BF%BB%E8%B6%8A%E9%95%BF%E5%9F%8E/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>树莓派(raspberry pi) ssh RefuseConnection</title>
+    <link href="http://www.kingr.top/2018/09/29/raspberrypiRefuseConnection/"/>
+    <id>http://www.kingr.top/2018/09/29/raspberrypiRefuseConnection/</id>
+    <published>2018-09-29T06:37:36.000Z</published>
+    <updated>2018-10-04T09:04:39.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>通过ssh连接树莓派的时候，出现如下问题：</p><pre><code>ssh: connect to host xxx.xxx.xx.x port 22: connection refused.</code></pre><p>这个时候意味着你的ip是正确的，但是树莓派系统中的<code>ssh</code>却并没有开启。</p><h1 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h1><p>这个时候我们只需要将内存卡拔下了，插入电脑中，在 <code>boot</code> 分区创建一个名字为 <code>ssh</code> 的新文件夹。重新插回设备，启动，问题解决。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h1&gt;&lt;p&gt;通过ssh连接树莓派的时候，出现如下问题：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ssh: connect to host xxx.
+      
+    
+    </summary>
+    
+      <category term="解决问题" scheme="http://www.kingr.top/categories/%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98/"/>
+    
+    
+      <category term="树莓派" scheme="http://www.kingr.top/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+      <category term="ssh" scheme="http://www.kingr.top/tags/ssh/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>labelImg安装使用</title>
+    <link href="http://www.kingr.top/2018/09/24/labelImg%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/"/>
+    <id>http://www.kingr.top/2018/09/24/labelImg安装使用/</id>
+    <published>2018-09-24T13:58:09.000Z</published>
+    <updated>2018-09-27T10:25:19.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="why"><a href="#why" class="headerlink" title="why"></a>why</h1><p>因为我们在学习和使用tensorflow或者其他机器学习的框架的时候，我们最终还是会需要把自己配置的数据使用到我们的程序中，这个时候我们需要一个能够帮助自己为图片贴标签的工具。labelImg正是这样一个简易好用的工具。</p><p><a href="https://github.com/tzutalin/labelImg" title="labelImg" target="_blank" rel="noopener">labelImg</a></p><p><img src="https://i.loli.net/2018/09/24/5ba8ef101801f.png" alt="labelImg" title="labelImg"></p><h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>我们安装的前提是我们的电脑是必须有pyhton、qt4或者qt5、lxml。</p><pre><code>git clone https://github.com/tzutalin/labelImg.git</code></pre><p>然后进入到<code>labelImg</code>目录下</p><pre><code>make qt5py3 #如果是pyqt4则 `make qt4py2`</code></pre><p>最终执行</p><pre><code>python3 labelImg.py</code></pre><p>我们就来到了我们可以操作的图形界面了，然后可以自由的贴标签了。</p><h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>该工具本来就是设计了图形化的界面，所以对于它的使用也十分简单明了的。</p><p>前提：</p><ul><li>一个很多图片的文件夹</li><li>一个和上一个文件夹并行的文件夹，用来存储标签</li></ul><p>使用</p><h2 id="步骤-PascalVOC"><a href="#步骤-PascalVOC" class="headerlink" title="步骤(PascalVOC)"></a>步骤(PascalVOC)</h2><ol><li>点击<code>Change Save Dir</code> 将默认的标签存储文件改变至之前已经建好的标签文件夹，如图</li></ol><p><img src="https://i.loli.net/2018/09/27/5baca9550cf3c.png" alt="Screenshot_20180927_175430.png"></p><ol start="2"><li><p><code>Open Dir</code>打开你将要贴标签的图片的目录，选择完毕后会自动加载第一张图片。</p></li><li><p>右键图片选择<code>CreateRectBox</code>或者在菜单中选择<code>CreateRectBox</code>,选择出你所需要贴标签的部分。<code>Ctrl+S</code>或者点击<code>Save</code>将会自动将标签信息保存到刚刚设置到的目录下。</p></li></ol><p><img src="https://i.loli.net/2018/09/27/5bacabb516d5c.png" alt="Screenshot_20180927_180617.png"></p><h2 id="步骤-YOLO"><a href="#步骤-YOLO" class="headerlink" title="步骤(YOLO)"></a>步骤(YOLO)</h2><ol><li><p>通过点击左边菜单里的<code>PascalVOC</code>转换为<code>YOLO</code>格式</p></li><li><p>在你的创建的<code>label</code>文件夹下编辑<code>class.text</code>，定义你将要贴的所有标签。</p></li></ol><p><img src="https://i.loli.net/2018/09/27/5bacaed592f66.png" alt="Screenshot_20180927_181929.png"></p><ol start="3"><li>按照上一个步骤，选框和贴贴标签。</li></ol><p>因为贴标签过程中需要一张一张执行，所以快速的方法是合理利用快捷键和<code>default label</code>,祝你使用愉快！</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;why&quot;&gt;&lt;a href=&quot;#why&quot; class=&quot;headerlink&quot; title=&quot;why&quot;&gt;&lt;/a&gt;why&lt;/h1&gt;&lt;p&gt;因为我们在学习和使用tensorflow或者其他机器学习的框架的时候，我们最终还是会需要把自己配置的数据使用到我们的程序中，这个时候
+      
+    
+    </summary>
+    
+      <category term="学习" scheme="http://www.kingr.top/categories/%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="tensorflow" scheme="http://www.kingr.top/tags/tensorflow/"/>
+    
+      <category term="python" scheme="http://www.kingr.top/tags/python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>python-opencv调用摄像头</title>
+    <link href="http://www.kingr.top/2018/09/12/python-opencv%E8%B0%83%E7%94%A8%E6%91%84%E5%83%8F%E5%A4%B4/"/>
+    <id>http://www.kingr.top/2018/09/12/python-opencv调用摄像头/</id>
+    <published>2018-09-12T08:40:08.000Z</published>
+    <updated>2018-09-12T09:41:37.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h1><p>Python利用opencv的库实现对摄像头的数据的读取，并逐帧显示。</p><p>opencv的安装： 终端运行 <code>pip install python-opencv</code> 即可。</p><h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="用到的库"><a href="#用到的库" class="headerlink" title="用到的库"></a>用到的库</h2><pre><code>import cv2import numpy as np #如果你需要对读取到的摄像数据进行进一步的应用。</code></pre><h2 id="调用摄像头"><a href="#调用摄像头" class="headerlink" title="调用摄像头"></a>调用摄像头</h2><p>调用摄像头，<code>VideoCapture()</code> 内的数字表示的是摄像头的设备编号，笔记本内建摄像头的编号一般为 <code>0</code>，如果你想使用外置摄像头将数字改为 <code>1</code>等，随你的摄像头的设备编号决定，可以通过设备管理器查看并尝试。</p><pre><code>cap = cv2.VideoCapture(0)</code></pre><h2 id="读取并播放"><a href="#读取并播放" class="headerlink" title="读取并播放"></a>读取并播放</h2><p>在 <code>while</code> 循环中利用 <code>cap.read()</code> 读取摄像头的某一帧，通过 <code>imshow()</code> 来展示这一帧。等待1个单位时间后，如果检测到 <code>q</code> 按键被按下，就跳出循环，即停止读取和展示。</p><p>其中 <code>ret</code> 变量是<code>cap</code>读取之后返回的一个<code>bool</code> 变量，可以用它来判断是否读取到数据。</p><pre><code>while(True):  ret,frame = cap.read(0) #读取数据  cv2.imshow(&apos;Frame&apos;,frame) #展示结果  if cv2.waitkey(1) &amp; 0xFF == ord(&apos;q&apos;):    break</code></pre><h2 id="释放摄像头"><a href="#释放摄像头" class="headerlink" title="释放摄像头"></a>释放摄像头</h2><p>在调用摄像头之后不要忘记释放摄像头，否则你的下次调用摄像头的时候可能会有被占用的报错。我们需要释放摄像头并关闭我们用来展示的窗口。</p><pre><code>cap.release()cv2.destoryAllWindows()</code></pre><h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><p>附上上述操作的完整代码：</p><pre><code>import numpy as np  import cv2cap = cv2.VideoCapture(0)while(True):    ret, frame = cap.read()    cv2.imshow(&apos;Frame&apos;,frame)    if cv2.waitKey(1) &amp; 0xFF == ord(&apos;q&apos;):        breakcap.release()cv2.destroyAllWindows()</code></pre><h1 id="其他操作"><a href="#其他操作" class="headerlink" title="其他操作"></a>其他操作</h1><h2 id="保存视频或者截图"><a href="#保存视频或者截图" class="headerlink" title="保存视频或者截图"></a>保存视频或者截图</h2><p>如果我们想要保存其中的某一帧，即截图，使用 <code>cv2.imwrite()</code> 可以非常方便的完成该功能，<code>imwrite</code>的使用方法，戳 <a href="https://docs.opencv.org/3.0-beta/modules/imgcodecs/doc/reading_and_writing_images.html?highlight=imwrite#cv2.imwrite" title="imwrite" target="_blank" rel="noopener">这里</a></p><p>对于保存视频需要稍微复杂一些些的操作，我们需要创建一个 <code>VideoWrite</code>对象，并指定保存的文件名，然后指定<code>Fourcc</code> 值(下节详细)。然后指定每秒的帧数(fps)和帧的大小。该对象的最后一个参数为<code>isColor</code>，如果为<code>True</code>则编码器需要彩色帧，默认为 <code>False</code>,即保存为灰度帧。</p><p><strong>Fourcc</strong>是用于指定<strong>视频编码器</strong>的四字节代码，在 <a href="http://www.fourcc.org/codecs.php" target="_blank" rel="noopener">fourcc.org</a> 中可以找到可用的编码器列表（值得注意的是对于不同的系统适用的编码器似乎还不同） 。在这里我们使用 <code>cv2.VideoWriter_fourcc()</code> 对象来指定，比如使用 <code>cv2.VideoWriter_fourcc(* &#39;XVID&#39;)</code> 来指定<code>XVID</code>编码器。</p><p>代码如下：</p><pre><code>import numpy as npimport cv2cap = cv2.VideoCapture(0)fourcc = cv2.VideoWriter_fourcc(*&apos;XVID&apos;)out = cv2.VideoWriter(&apos;output.avi&apos;,fourcc, 20.0, (640,480))while(cap.isOpened()):    ret, frame = cap.read()    if ret==True:        frame = cv2.flip(frame,0)        out.write(frame)        cv2.imshow(&apos;frame&apos;,frame)        if cv2.waitKey(1) &amp; 0xFF == ord(&apos;q&apos;):            break    else:        breakcap.release()out.release()cv2.destroyAllWindows()</code></pre><h1 id="相关来源"><a href="#相关来源" class="headerlink" title="相关来源"></a>相关来源</h1><p><a href="https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_gui/py_video_display/py_video_display.html" title="Opencv" target="_blank" rel="noopener">Opencv</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;关于&quot;&gt;&lt;a href=&quot;#关于&quot; class=&quot;headerlink&quot; title=&quot;关于&quot;&gt;&lt;/a&gt;关于&lt;/h1&gt;&lt;p&gt;Python利用opencv的库实现对摄像头的数据的读取，并逐帧显示。&lt;/p&gt;
+&lt;p&gt;opencv的安装： 终端运行 &lt;code&gt;pip i
+      
+    
+    </summary>
+    
+      <category term="学习" scheme="http://www.kingr.top/categories/%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="python" scheme="http://www.kingr.top/tags/python/"/>
+    
+      <category term="opencv" scheme="http://www.kingr.top/tags/opencv/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>更换python环境后 neovim自动补全失效</title>
+    <link href="http://www.kingr.top/2018/09/10/nvim%E8%A1%A5%E5%85%A8%E5%A4%B1%E6%95%88/"/>
+    <id>http://www.kingr.top/2018/09/10/nvim补全失效/</id>
+    <published>2018-09-10T13:49:55.000Z</published>
+    <updated>2018-09-10T13:56:38.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>更换python环境后，打开neovim自动补全就失效了。</p><p>使用的补全插件：<code>deoplete</code></p><p>开发环境： <code>Pyhton</code></p><h1 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h1><p>这是因为更换了python的环境当前<code>deoplete</code> 补全插件失去了依赖，我的解决办法是</p><pre><code>pip insall nvim</code></pre><p>重新打开<code>nvim</code> 后补全又回来了，</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h1&gt;&lt;p&gt;更换python环境后，打开neovim自动补全就失效了。&lt;/p&gt;
+&lt;p&gt;使用的补全插件：&lt;code&gt;deoplete&lt;/c
+      
+    
+    </summary>
+    
+      <category term="解决问题" scheme="http://www.kingr.top/categories/%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98/"/>
+    
+    
+      <category term="deoplete" scheme="http://www.kingr.top/tags/deoplete/"/>
+    
+      <category term="python" scheme="http://www.kingr.top/tags/python/"/>
+    
+      <category term="neovim" scheme="http://www.kingr.top/tags/neovim/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>nvim:Error while reading ShaDa file there is an item at position 270498 that must not be there Missing itemsare for internal uses only</title>
+    <link href="http://www.kingr.top/2018/09/04/vimfile%E9%97%AE%E9%A2%98/"/>
+    <id>http://www.kingr.top/2018/09/04/vimfile问题/</id>
+    <published>2018-09-04T08:17:01.000Z</published>
+    <updated>2018-09-04T08:38:05.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>今天打开<code>SpaceVim</code> 的时候提示错误：</p><pre><code>Error while reading ShaDa file: there is an item at position 270498 that must not be there: Missing itemsare for internal uses only</code></pre><p>并且发现只要一旦打开了vimfile这个插件问题就开始提示。继续按下 <code>Enter</code> 会开始提示vim配置上具体哪一行的错误。</p><h1 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h1><p><code>nvim</code> github上有相似的问题: <a href="https://github.com/neovim/neovim/issues/6875" title="vimfile错误" target="_blank" rel="noopener">#6875</a> ，实际上配置上并没有什么错误。</p><p>按照git上所说我们在终端运行 <code>nvim -u NONE -V</code>得到输出信息：</p><pre><code>$ nvim -u NONE -VReading ShaDa file &quot;/Users/kevin/.local/share/nvim/shada/main.shada&quot; info marks oldfilesE576: Error while reading ShaDa file: there is an item at position 270498 that must not be there: Missing items are for internal uses onlyPress ENTER or type command to continue</code></pre><p>我们得到的输出信息也许不同不过我们只要移除 <code>.local/nvim/shada/main.shada</code> ，完美工作。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h1&gt;&lt;p&gt;今天打开&lt;code&gt;SpaceVim&lt;/code&gt; 的时候提示错误：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Error while 
+      
+    
+    </summary>
+    
+      <category term="解决问题" scheme="http://www.kingr.top/categories/%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98/"/>
+    
+    
+      <category term="SpaceVim" scheme="http://www.kingr.top/tags/SpaceVim/"/>
+    
+      <category term="nvim" scheme="http://www.kingr.top/tags/nvim/"/>
+    
+      <category term="vimfile" scheme="http://www.kingr.top/tags/vimfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>tensorflow 加载自己的数据</title>
+    <link href="http://www.kingr.top/2018/09/03/load-my-own-data/"/>
+    <id>http://www.kingr.top/2018/09/03/load-my-own-data/</id>
+    <published>2018-09-03T11:29:30.000Z</published>
+    <updated>2018-09-04T08:14:12.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h1><p>很多时候我们学习tensorflow或者其他deeplearning的课程的时候，我们都被牵着鼻子走，使用一些捏造出来的数据，苦于不能处理我们自己。所以我们今天来尝试一下怎么加载自己的图片数据，将图片数据转换成我们通常学习的数组数据，便于应用我们学习到的深度学习的知识。</p><p>我们需要使用的库有<code>os</code>、<code>np</code>、<code>cv2</code>、<code>pickle</code> 等。</p><p><img src="https://i.loli.net/2018/09/04/5b8def3e54dd5.png" alt="lib" title="lib"></p><h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><pre><code>import numpy as np import matplotlib.pyplot as pltimport osimport cv2import randomimport pickleDATADIR = &quot;./Datasets/PetImages&quot;CATEGORIES = [&apos;Cat&apos;,&apos;Dog&apos;]IMG_SIZE = 50  #将size设置为50可以识别出物体 又降低了数组大小training_data = []def create_training_data():    for category in CATEGORIES:        path = os.path.join(DATADIR, category) # path to cats or dogs dir          class_num = CATEGORIES.index(category)   #0 is cat , 1 is dog         for  img in os.listdir(path):            try:                img_array = cv2.imread(os.path.join(path,img), cv2.IMREAD_GRAYSCALE)   #将图片数据转换为数组 因为颜色并不影响识别所以采用IMREAD_GRAYSCALE                new_array = cv2.resize(img_array, (IMG_SIZE,IMG_SIZE))                training_data.append([new_array,class_num])            except Exception as e:                passcreate_training_data()random.shuffle(training_data) #将所有数据进行随机排序有助于提高训练识别水平X_temp = []y = []for feature,label in training_data:     #分离图片数据和标签信息    X_temp.append(feature)    y.append(label)X = np.array(X_temp).reshape(-1,IMG_SIZE,IMG_SIZE,1)#保存数据 以供下次调用或者其他程序调用pickle_out = open(&apos;X.pickle&apos;,&quot;wb&quot;)pickle.dump(X,pickle_out)pickle_out.close()pickle_out = open(&apos;y.pickle&apos;,&quot;wb&quot;)pickle.dump(y,pickle_out)pickle_out.close()#加载数据举例pickle_in = open(&quot;X.pickle&quot;,&quot;rb&quot;)X = pickle.load(pickle_in)</code></pre><p><code>来源</code>： <code>[sentdex](https://pythonprogramming.net/loading-custom-data-deep-learning-python-tensorflow-keras/)</code></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;关于&quot;&gt;&lt;a href=&quot;#关于&quot; class=&quot;headerlink&quot; title=&quot;关于&quot;&gt;&lt;/a&gt;关于&lt;/h1&gt;&lt;p&gt;很多时候我们学习tensorflow或者其他deeplearning的课程的时候，我们都被牵着鼻子走，使用一些捏造出来的数据，苦于不能处理我
+      
+    
+    </summary>
+    
+      <category term="学习" scheme="http://www.kingr.top/categories/%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="tensorflow" scheme="http://www.kingr.top/tags/tensorflow/"/>
+    
+      <category term="人工智能" scheme="http://www.kingr.top/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/"/>
+    
+      <category term="机器学习" scheme="http://www.kingr.top/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>manjaro特效消失了</title>
+    <link href="http://www.kingr.top/2018/08/31/manjaro%E7%89%B9%E6%95%88/"/>
+    <id>http://www.kingr.top/2018/08/31/manjaro特效/</id>
+    <published>2018-08-31T02:25:52.000Z</published>
+    <updated>2018-09-04T08:40:24.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>某天开启自己系统忽然发现自己的manjaro酷炫的特效全部不见了，包括<code>latte</code> 的全透明设置都无效了，所以这肯定是一个系统全局的问题。</p><h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><p>发生在我电脑上的是系统的混成器出了问题，只需要打开设置 <code>显示和监控</code>&gt;<code>混成器</code>，如果有提示说你的混成器出了问题，按提示重新开启即可解决问题，如果不是没有提示则不是你的混成器出了问题，建议另寻它法。</p><p><img src="https://i.loli.net/2018/09/04/5b8e44c872347.png" alt="Screenshot_20180904_122800.png"></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h2&gt;&lt;p&gt;某天开启自己系统忽然发现自己的manjaro酷炫的特效全部不见了，包括&lt;code&gt;latte&lt;/code&gt; 的全透明设置都无
+      
+    
+    </summary>
+    
+      <category term="解决问题" scheme="http://www.kingr.top/categories/%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98/"/>
+    
+    
+      <category term="manjaro" scheme="http://www.kingr.top/tags/manjaro/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Manjaro升级之后tensorflow不见了，并且安装不了</title>
+    <link href="http://www.kingr.top/2018/08/25/tensorflow%E5%AE%89%E8%A3%85%E4%B8%8D%E4%BA%86/"/>
+    <id>http://www.kingr.top/2018/08/25/tensorflow安装不了/</id>
+    <published>2018-08-24T22:47:43.000Z</published>
+    <updated>2018-08-24T23:12:41.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>最近manjaro升级之后发现我的tensorflow程序运行不了了，终端检查发现我试图重新安装tensorflow也不行。</p><h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>出现这个问题的原因的就是manjaro升级之后python的版本也随之升级了，由3.6&gt;&gt;3.7，而tensorflow目前是还不支持3.7的，<a href="https://github.com/tensorflow/tensorflow/issues/20444" title="#20444" target="_blank" rel="noopener">#20444</a></p><p><strong>解决方法</strong>：</p><ol><li>关注上述issue，等待tensorflow对python3.7的支持</li><li>使用python多版本控制，将你的系统默认的python版本设置为3.6的</li></ol><p>对于第二种方法我的采用 <code>pyenv</code>这个包来进行我的python版本控制，非常方便。Manjaro可以直接 <code>pacman -S pyenv</code>安装。其他的安装和使用方法，详情：<a href="https://github.com/pyenv/pyenv" title="pyenv" target="_blank" rel="noopener">pyenv</a></p><p><strong>使用方法</strong>：</p><ol><li><code>pyenv install --list</code> 可以查看所有可安装版本</li><li><code>pyenv install 3.6.6</code> 可以安装3.6.6的版本，以此类推</li><li><code>pyenv global 3.6.6</code> 将3.6.6设置为系统全局版本</li><li><code>pyenv shell 3.6.6</code> 将3.6.6设置为终端的使用版本</li></ol><p>遇到的坑：</p><p>执行<code>pyenv shell 3.6.6</code>之后提示</p><pre><code>pyenv: shell integration not enabled. Run `pyenv init&apos; for instructions.</code></pre><p>执行 <code>pyenv init</code> 之后</p><pre><code># Load pyenv automatically by appending# the following to ~/.zshrc:eval &quot;$(pyenv init -)&quot;</code></pre><p>所以将 <code>eval &quot;$(pyenv init -)&quot;</code> 添加到我的终端配置文件 <code>~/.zshrc</code> ，这是对于<code>zsh</code>而言的，<code>bash</code>的情况，添加到<code>~/.bashrc</code>即可。重启终端，再执行<code>pyenv shell 3.6.6</code> 成功了。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h2&gt;&lt;p&gt;最近manjaro升级之后发现我的tensorflow程序运行不了了，终端检查发现我试图重新安装tensorflow也不行。
+      
+    
+    </summary>
+    
+      <category term="解决问题" scheme="http://www.kingr.top/categories/%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98/"/>
+    
+    
+      <category term="tensorflow" scheme="http://www.kingr.top/tags/tensorflow/"/>
+    
+      <category term="python" scheme="http://www.kingr.top/tags/python/"/>
+    
+      <category term="Manjaro" scheme="http://www.kingr.top/tags/Manjaro/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>deoplete补全问题:restarting server because it&#39;s taking too long</title>
+    <link href="http://www.kingr.top/2018/08/21/deoplete%E8%A1%A5%E5%85%A8%E9%97%AE%E9%A2%98/"/>
+    <id>http://www.kingr.top/2018/08/21/deoplete补全问题/</id>
+    <published>2018-08-21T09:57:23.000Z</published>
+    <updated>2018-08-21T10:48:24.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>用vim写python的时候遇到一个问题：restarting server because it’s taking too long,如图所示：</p><p><img src="https://i.loli.net/2018/08/21/5b7be3a0c975d.png" alt="too long" title="Restarting"></p><p>并且补全没有加载出来。</p><p>这个问题一般只出现在我们需要调用比较大的pyhton包的时候，比如tensorflow、numpy和pandas等。</p><h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>deoplete的github上有相似的issue：<a href="https://github.com/zchee/deoplete-jedi/issues/167" target="_blank" rel="noopener">#167</a><br>因为deoplete在补全之前会将我们import的包缓存起来</p><p> <code>~/.cache/deoplete/jedi/3.6/</code></p><p>deoplete默认的加载时间是10s,对于有些大包的加载来说是不够的，所以我们要做的便是增加加载的时间。</p><p><strong>解决:</strong></p><p>在这里我使用的是SpaceVim ，我只需要在我的 <code>myspacevim.vim</code>的配置下增加以下代码：</p><pre><code>let g:deoplete#sources#jedi#server_timeout = 25</code></pre><p>你也可以在你自己的<code>vimrc</code>中增加，其中默认的加载时间是<code>10s</code>，我将之调整到了<code>25s</code>，因为经过我的不断测试对于我加载tensorflow来说，这个时间是刚刚好了。</p><p>如果你想要多次测试缓存的时间，你可以在每次测试之后将 <code>~/.cache/deoplete/jedi/3.6</code>  里的缓存文件删除。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h2&gt;&lt;p&gt;用vim写python的时候遇到一个问题：restarting server because it’s taking too
+      
+    
+    </summary>
+    
+    
+      <category term="vim" scheme="http://www.kingr.top/tags/vim/"/>
+    
+      <category term="SpaceVim" scheme="http://www.kingr.top/tags/SpaceVim/"/>
+    
+      <category term="deoplete" scheme="http://www.kingr.top/tags/deoplete/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>机器学习的方法介绍</title>
+    <link href="http://www.kingr.top/2018/08/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%96%B9%E6%B3%95/"/>
+    <id>http://www.kingr.top/2018/08/19/机器学习的方法/</id>
+    <published>2018-08-19T07:19:45.000Z</published>
+    <updated>2018-08-21T10:49:31.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="机器学习方法"><a href="#机器学习方法" class="headerlink" title="机器学习方法"></a>机器学习方法</h1><p>机器学习具体有哪些方法呢？主要包括以下几种：</p><ul><li>监督学习(supervised learning)</li><li>非监督学习(unsupervised learning) </li><li>半监督学习(semi-supervised learning)</li><li>强化学习(reinforcement learning)</li><li>遗传算法(genetic algorithm)</li></ul><h2 id="监督学习-supervised-learning"><a href="#监督学习-supervised-learning" class="headerlink" title="监督学习(supervised learning)"></a>监督学习(supervised learning)</h2><p>监督学习是通过学习已有的资料建立模型，然后再依据此模型来推测新的实例，在这种学习过程中我们需要对已有的学习资料提供标签信息。</p><p>  比如说通过学习大量猫的图（这个时候我们需要告诉机器这是猫），然后建立猫的模型，再依据所建立的模型判断所给的图片是否是猫。</p><p><strong>特点</strong>：有数据、有标签</p><h2 id="非监督学习-unsupervised-learning"><a href="#非监督学习-unsupervised-learning" class="headerlink" title="非监督学习(unsupervised learning)"></a>非监督学习(unsupervised learning)</h2><p>非监督学习与监督学习相对，通过让机器自己学习大量训练资料并且自主判断资料之间的区别，不提供数据对应的标签信息。</p><p>比如通过让机器学习大量的猫和狗的图片，并且不告诉机器那些是猫那些是狗，机器根据所学习到的规律来判断我们所给的图片是猫或者狗。</p><p><strong>特点</strong>：有数据、无标签</p><h2 id="半监督学习-semi-supervised-learning"><a href="#半监督学习-semi-supervised-learning" class="headerlink" title="半监督学习(semi-supervised learning)"></a>半监督学习(semi-supervised learning)</h2><p>半监督学习顾名思义综合了监督学习与非监督学习，在学习过程中利用少量有标签的样本和大量没有标签的样本来进行训练和分类。</p><p><strong>特点</strong>：有数据、有些有标签、有些无标签</p><h2 id="强化学习-reinforcement-learning"><a href="#强化学习-reinforcement-learning" class="headerlink" title="强化学习(reinforcement learning)"></a>强化学习(reinforcement learning)</h2><p>把计算机丢到一个它完全陌生的环境或者让它完成一项从未接触过的任务，它自己会去尝试各种手段让自己适应这个环境，或者学会完成这个任务的方法途径。</p><p>比如说训练机器人投篮，给它一个球告诉它它的目标是投中，让它自己尝试各种各样的投篮方法。在开始阶段它的命中率可能会非常的低，不过它会像人类一样总结自己成功或失败的经验，最终达到较高的成功率。Alpha Go也正式利用了这样一种学习方式。</p><p><strong>特点</strong>：总结经验</p><h2 id="遗传算法-genetic-algorithm"><a href="#遗传算法-genetic-algorithm" class="headerlink" title="遗传算法(genetic algorithm)"></a>遗传算法(genetic algorithm)</h2><p>这种方法是模拟我们所熟知的进化理论，适者生存，通过这种淘汰机制去选择最优的设计或模型。</p><p><strong>特点</strong>：进化、淘汰</p><p><code>参考</code>：<a href="https://morvanzhou.github.io/tutorials/machine-learning/ML-intro/1-1-machine-learning/" title="多种多样的机器学习" target="_blank" rel="noopener"><code>多种多样的机器学习</code></a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;机器学习方法&quot;&gt;&lt;a href=&quot;#机器学习方法&quot; class=&quot;headerlink&quot; title=&quot;机器学习方法&quot;&gt;&lt;/a&gt;机器学习方法&lt;/h1&gt;&lt;p&gt;机器学习具体有哪些方法呢？主要包括以下几种：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;监督学习(supervised le
+      
+    
+    </summary>
+    
+      <category term="学习" scheme="http://www.kingr.top/categories/%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="人工智能" scheme="http://www.kingr.top/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/"/>
+    
+      <category term="机器学习" scheme="http://www.kingr.top/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>fcitx-rime输入法配置</title>
+    <link href="http://www.kingr.top/2018/08/18/fcitx-rime%E8%BE%93%E5%85%A5%E6%B3%95%E9%85%8D%E7%BD%AE/"/>
+    <id>http://www.kingr.top/2018/08/18/fcitx-rime输入法配置/</id>
+    <published>2018-08-18T04:10:44.000Z</published>
+    <updated>2018-08-21T10:49:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>使用rime输入已经有一段时间，但是很惭愧，一直使用的是默认的配置，配置rime输入法这件事情一直也都在日程上，至今才开始配置。</p><p>对默认的配置有一下两点不满：</p><ul><li>皮肤太丑</li><li>词库不全</li></ul><p>在这一次配置中着重解决以上两个问题。</p><h2 id="配置技巧"><a href="#配置技巧" class="headerlink" title="配置技巧"></a>配置技巧</h2><p>在 <code>~/.config/fcitx/rime/</code> 目录下新建 <code>default.custom.yaml</code> 将你需要更改的配置由<code>default.yaml</code> 复制到其中的 <code>patch:</code> 下，rime会优先考虑补丁(patch)里的设置，如：</p><pre><code>patch:  schema_list:    - schema: luna_pinyin    - schema: luna_pinyin_fluency#    - schema: bopomofo#    - schema: bopomofo_tw #    - schema: cangjie5#    - schema: stroke#    - schema: terra_pinyinmenu/page_size: 6</code></pre><p>具体的某个输入法的设置可以依法炮制，比如新建 <code>luna_pinyin.custom.yaml</code></p><pre><code>patch:  switches:    - name: ascii_mode      reset: 0    states: [ 中文, 西文 ]    - name: full_shape      states: [ 半角, 全角 ]    - name: simplification      reset: 1      states: [ 漢字, 汉字 ]    - name: ascii_punct      states: [ 。，, ．， ] </code></pre><p>这种做法可以让我们在轻松的保存自己的配置，以便进行同步。</p><h2 id="添加皮肤"><a href="#添加皮肤" class="headerlink" title="添加皮肤"></a>添加皮肤</h2><p>因为看着默认的fcitx的皮肤太丑，共有三个选项：<code>dark</code>、<code>default</code>和<code>classic</code>，任何一个都不让人满意。所以在网络上找了许多资料配置皮肤。</p><h3 id="ibus-rime"><a href="#ibus-rime" class="headerlink" title="ibus-rime"></a>ibus-rime</h3><p>ibus-rime的皮肤配置写入如下文件就好</p><p><code>~/.config/ibus/rime/default.custom.yaml</code></p><p>记录一个配置皮肤的网页工具：</p><p>  <code>https://rime.netlify.com/</code></p><h3 id="fcitx-rime"><a href="#fcitx-rime" class="headerlink" title="fcitx-rime"></a>fcitx-rime</h3><p>在fcitx下尝试了很多遍修改配置的方法并不奏效，所以我觉得fcitx的皮肤配置与输入法是分离的，可以调整fcitx的皮肤但是不能调整输入法的皮肤。</p><p>方式：</p><p>下载皮肤配置文件并复制到目录 <code>~/.config/fcitx/skin/</code>下就可以切换了。</p><p>推荐皮肤：</p><ol><li><p><code>fcitx-skin-material</code><br>arch下可以直接使用<code>pacman -S fcitx-skin-material</code>进行安装。</p></li><li><p><code>mantis</code></p></li></ol><pre><code>git clone https://github.com/fcitx/fcitx-artworkcd fcitx-artworkcp -r skin ~/.config/fcitx/</code></pre><h2 id="词库添加"><a href="#词库添加" class="headerlink" title="词库添加"></a>词库添加</h2><p>使用的工具 <code>深蓝词库转换</code>：</p><p><code>https://github.com/studyzy/imewlconverter</code></p><p>下载该工具用wine运行，或者在windows下运行。</p><p>然后下载你所需要的搜狗细胞词库：</p><p>  <code>https://pinyin.sogou.com/dict/cate/index/</code></p><p>导入到 <code>深蓝词库转换</code>然后转换为 <code>Rime输入法</code> 格式。<br>将转换后的内容写在以 <code>***.dict.yaml</code> 命名的文件中，如：</p><pre><code># luna_pinyin# Rime dictionary 计算机# encoding: utf-8---name: luna_pinyin.computerversion: &quot;2018.08.18&quot;sort: by_weightuse_preset_vocabulary: trueimport_tables:  - luna_pinyin  - luna_pinyin.computer...阿姆达尔定律    a mu da er ding lv    1阿帕网    a pa wang    1埃尔布朗基    ai er bu lang ji    1埃尔米特函数    ai er mi te han shu    1埃克特    ai ke te    1</code></pre><p>其中以下部分需要自己添加，乃格式所需不可缺少。                                  </p><pre><code>---name: luna_pinyin.computerversion: &quot;2018.08.18&quot;sort: by_weightuse_preset_vocabulary: trueimport_tables:  - luna_pinyin  - luna_pinyin.computer...</code></pre><p>然后将该文件复制到 <code>~/.config/fcitx/rime/</code> 下，在 <code>luna_pinyin.custom.yaml</code> 中添加以下内容即可</p><pre><code>#添加计算机词库，来自搜狗细胞词库转换而来translator:  dictionary: luna_pinyin.computer</code></pre><p>添加多个词库可以依法炮制，或者将多个词库合并为同一个词库。重新部署，这个时候尝试一下输入词库中的内容，你会发现已经可以了。 </p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;由来&quot;&gt;&lt;a href=&quot;#由来&quot; class=&quot;headerlink&quot; title=&quot;由来&quot;&gt;&lt;/a&gt;由来&lt;/h2&gt;&lt;p&gt;使用rime输入已经有一段时间，但是很惭愧，一直使用的是默认的配置，配置rime输入法这件事情一直也都在日程上，至今才开始配置。&lt;/p&gt;
+&lt;
+      
+    
+    </summary>
+    
+      <category term="学习" scheme="http://www.kingr.top/categories/%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="linux" scheme="http://www.kingr.top/tags/linux/"/>
+    
+      <category term="rime" scheme="http://www.kingr.top/tags/rime/"/>
+    
+      <category term="fcitx-rime" scheme="http://www.kingr.top/tags/fcitx-rime/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SpaceVim自动折行与自动换行</title>
+    <link href="http://www.kingr.top/2018/08/17/SpaceVim%E8%87%AA%E5%8A%A8%E6%8A%98%E8%A1%8C%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%8D%A2%E8%A1%8C/"/>
+    <id>http://www.kingr.top/2018/08/17/SpaceVim自动折行与自动换行/</id>
+    <published>2018-08-17T12:03:17.000Z</published>
+    <updated>2018-08-21T05:23:41.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h2><p>使用SpaceVim写Markdown总是一段一行写到头，让人很生气。而作为半吊子vim使用者脑子里完全没有关键词，不知道如何去搜索解决这个问题，于是搜了半天的自动换行，完全不得要领。在经过大量的查找之后终于让我找到了，自动换行与自动折行的区别。原来我想要达到的目的叫做自动折行。于是乎记录一下今天的愚蠢。。。</p><h2 id="自动换行与自动折行的区别"><a href="#自动换行与自动折行的区别" class="headerlink" title="自动换行与自动折行的区别"></a>自动换行与自动折行的区别</h2><ul><li><p>自动换行是当你写满多少字数之后会自动加一个回车，然后从下一行开始。</p></li><li><p>自动折行是当你写满窗口的一行之后自动从下一行开始，没有加回车，并且是同属一行的，如图：</p></li></ul><p><img src="https://i.loli.net/2018/08/17/5b76bfda92156.png" alt="自动折行" title="自动折行"></p><p>vim里面设置自动换行是在配置文件中设置<code>set textwidth = 80</code> </p><p>设置自动折行则是<code>set wrap</code> ，取消自动折行<code>set nowrap</code> </p><h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>需要SpaceVim在编辑markdown文件时自动折行，步骤如下：</p><p>1.在 <code>~/.SpaceVim.d/init.toml</code>  [options] 下添加：</p><pre><code>bootstrap_before = &quot;myspacevim#before&quot;</code></pre><p>2.然后新建:</p><p><code>~/.SpaceVim.d/autoload/myspacevim.vim</code></p><p>将下面这行添加到其中即可</p><pre><code>au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown wrap</code></pre><h2 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h2><p>设置了自动折行之后，就无法在插入模式愉悦地通过上下方向键跳到下一行，因为是同属一行的，所以只能通过左右方向键跳到下一行。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;关于&quot;&gt;&lt;a href=&quot;#关于&quot; class=&quot;headerlink&quot; title=&quot;关于&quot;&gt;&lt;/a&gt;关于&lt;/h2&gt;&lt;p&gt;使用SpaceVim写Markdown总是一段一行写到头，让人很生气。而作为半吊子vim使用者脑子里完全没有关键词，不知道如何去搜索解决这个
+      
+    
+    </summary>
+    
+      <category term="解决问题" scheme="http://www.kingr.top/categories/%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98/"/>
+    
+    
+      <category term="vim" scheme="http://www.kingr.top/tags/vim/"/>
+    
+      <category term="SpaceVim" scheme="http://www.kingr.top/tags/SpaceVim/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>git使用</title>
+    <link href="http://www.kingr.top/2018/08/15/git%E4%BD%BF%E7%94%A8/"/>
+    <id>http://www.kingr.top/2018/08/15/git使用/</id>
+    <published>2018-08-15T12:50:13.000Z</published>
+    <updated>2018-08-17T10:09:14.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="git简易的命令使用"><a href="#git简易的命令使用" class="headerlink" title="git简易的命令使用"></a>git简易的命令使用</h2><p>因为忽然想将自己的博客网站的hexo本地文件存到github上，以达到多机使用的目的。所以索性学习总结一下git的命令使用</p><h3 id="新建仓库"><a href="#新建仓库" class="headerlink" title="新建仓库"></a>新建仓库</h3><p>  使用到的命令：</p><pre><code>git init</code></pre><ol><li>建立一个本地文件夹</li><li>cd到该文件夹</li><li>执行 <code>git init</code>  即可</li></ol><h3 id="克隆到本地"><a href="#克隆到本地" class="headerlink" title="克隆到本地"></a>克隆到本地</h3><p>  使用到的命令</p><pre><code>git clone</code></pre><p>  这个命令的使用还是较为频繁的，很多开源软件的安装都是直接使用的git clone </p><p>  使用</p><pre><code>git clone http://www.github.com/某仓库.git 你本地的文件夹</code></pre><h3 id="添加与提交"><a href="#添加与提交" class="headerlink" title="添加与提交"></a>添加与提交</h3><p>  使用到的命令</p><pre><code>git add 和 git commit</code></pre><p>  工作流程：</p><ol><li>使用<code>git add &lt;filename&gt;</code> 将推送到缓冲区</li><li><p>使用<code>git commit -m &quot;代码改动信息&quot;</code>将改动的文件提交</p><p>做完这些后文件并没有被存到仓库中，相当于提交到了本地的仓库中<br>另外：</p></li><li><p>使用 <code>git status</code> 命令可以检查是否有改动的文件还未提交 </p></li><li>使用 <code>git diff &lt;filename&gt;</code> 查看改动详情</li></ol><hr><h3 id="待续…"><a href="#待续…" class="headerlink" title="待续…"></a>待续…</h3>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;git简易的命令使用&quot;&gt;&lt;a href=&quot;#git简易的命令使用&quot; class=&quot;headerlink&quot; title=&quot;git简易的命令使用&quot;&gt;&lt;/a&gt;git简易的命令使用&lt;/h2&gt;&lt;p&gt;因为忽然想将自己的博客网站的hexo本地文件存到github上，以达到多机使
+      
+    
+    </summary>
+    
+      <category term="学习" scheme="http://www.kingr.top/categories/%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="git" scheme="http://www.kingr.top/tags/git/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MarkDown学习记录</title>
+    <link href="http://www.kingr.top/2018/08/14/MarkDown%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/"/>
+    <id>http://www.kingr.top/2018/08/14/MarkDown学习记录/</id>
+    <published>2018-08-14T09:50:20.000Z</published>
+    <updated>2018-08-14T14:01:55.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="1-0-关于"><a href="#1-0-关于" class="headerlink" title="1.0 关于"></a>1.0 关于</h2><h3 id="1-1-关于"><a href="#1-1-关于" class="headerlink" title="1.1 关于"></a>1.1 关于</h3><p>从网络上听说markdown的语法简单到两分钟就可以学会，于是乎就开是作死地在这里写第一篇博文的时候用上了。<br>本人使用SpaceVim写markdown倒是有些违背了一步一步慢慢来的初衷，不过既然是使用编辑器又有何紧要呢。<br>在看别人的文档的时候看得一个牛逼的故事，一个关于辍学的牛逼故事。详情可以google markdown的作者。<br>markdown语法十分的简洁好用，相较于word的复杂段落、字体等的设置来说，的确可以称得上是两分钟学会的语法了。<br>简洁的语法使得写作者更加注重于写作文本的内容，并且同样可以拥有美观的外表。并且像字体的设置对于阅读而言自然是舒服即可，无须种种精细。</p><h3 id="1-2-markdown部分"><a href="#1-2-markdown部分" class="headerlink" title="1.2 markdown部分"></a>1.2 markdown部分</h3><p>  markdown的语法主要分为一下几个部分：<br>  标题<br>  段落<br>  区块引用<br>  代码区块<br>  强调<br>  列表<br>  分割线<br>  链接<br>  图片<br>  反斜杠\<br>  符号’`’  </p><h2 id="2-0-markdown语法"><a href="#2-0-markdown语法" class="headerlink" title="2.0 markdown语法"></a>2.0 markdown语法</h2><h3 id="2-1-标题"><a href="#2-1-标题" class="headerlink" title="2.1 标题"></a>2.1 标题</h3><p>  标题有两种表示方法，私心觉得第二种较为好用。写作时却是第一种显得清晰简洁，预览效果都是一样的。因为第二种所分的级数更多，所以觉得会更加常用。</p><p>  1、=与-</p><p>  文字下的’========’可以表示一级标题(无个数限制)<br>  文字下的’————–’可以表示二级标题(无个数限制)</p><p>  2、‘#’</p><p>  n个’#‘在文字前面可以表示n级标题，最多为6级标题</p><p>效果如下：</p><blockquote><h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1><h2 id="二级标题"><a href="#二级标题" class="headerlink" title="二级标题"></a>二级标题</h2><h1 id="一级标题-1"><a href="#一级标题-1" class="headerlink" title="一级标题"></a>一级标题</h1><h2 id="二级标题-1"><a href="#二级标题-1" class="headerlink" title="二级标题"></a>二级标题</h2><h3 id="三级标题"><a href="#三级标题" class="headerlink" title="三级标题"></a>三级标题</h3><h4 id="四级标题"><a href="#四级标题" class="headerlink" title="四级标题"></a>四级标题</h4><h5 id="五级标题"><a href="#五级标题" class="headerlink" title="五级标题"></a>五级标题</h5><h6 id="六级标题"><a href="#六级标题" class="headerlink" title="六级标题"></a>六级标题</h6></blockquote><h3 id="2-2-段落"><a href="#2-2-段落" class="headerlink" title="2.2 段落"></a>2.2 段落</h3><p>  换行即为段落</p><p>  如果要段内强制换行则在句末加上<b>两个及以上</b>的空格<b>加回车</b>（引用中换行省略回车）</p><h3 id="2-3-区块引用"><a href="#2-3-区块引用" class="headerlink" title="2.3 区块引用"></a>2.3 区块引用</h3><p>在段落的第一行使用 &gt; 符号即可，在引用中使用 &gt;&gt; 还可以表示嵌套   </p><blockquote><p>引用   </p><blockquote><p>引用中引用</p></blockquote></blockquote><h3 id="2-4-代码区块"><a href="#2-4-代码区块" class="headerlink" title="2.4 代码区块"></a>2.4 代码区块</h3><p>  既然markdown的发明者是一名极客肯定少不了代码的引用。<br>  代码区块建立只需要在每行加上<b>4个空格</b> 或者两个<b>制表符</b><br>  需要注意的是在强制换行中无用，如需建立代码区块仍然需要空一行即另起一段。<br>  如下：</p><pre><code>import tesnsorflow as tfimport re</code></pre><h3 id="2-5-强调"><a href="#2-5-强调" class="headerlink" title="2.5 强调"></a>2.5 强调</h3><p>在强调内容的两侧加上*或者_,两侧各加一个表示斜体，两侧各加两个表示斜体<br>另外因为markdown兼容html语法所以如果不限麻烦还可以使用我们熟知的&lt;&gt;中间加b来加粗<br>示例：</p><blockquote><p>  <strong>粗体</strong><br>  <em>斜体</em></p></blockquote><h3 id="2-6-列表"><a href="#2-6-列表" class="headerlink" title="2.6 列表"></a>2.6 列表</h3><p>使用·、+、或-标记无序列表，标记后至少有一个空格</p><blockquote><ul><li>第一项  </li></ul><ul><li>第二项</li></ul><ul><li>第三项</li></ul></blockquote><p>使用数字加上.进行有序标记，同样标记后至少一个空格   </p><blockquote><ol><li>第一</li><li>第二</li><li>第三</li></ol></blockquote><h3 id="2-7-分割线"><a href="#2-7-分割线" class="headerlink" title="2.7 分割线"></a>2.7 分割线</h3><p>使用三个或以上的* 或者使用-或_同样都是三个及以上（使用-需要另外空行哦，因为它还有标题的功能，<br>所以避免使用最好了）<br>例如</p><hr><hr><hr><h3 id="2-8-链接"><a href="#2-8-链接" class="headerlink" title="2.8 链接"></a>2.8 链接</h3><p>链接有两种形式，分别为行内式和参考式</p><p>1.行内式：   </p><blockquote><p>[mygithub](<a href="http://www.github.com/kingrongH" target="_blank" rel="noopener">http://www.github.com/kingrongH</a> “mygithub”)</p></blockquote><p>效果：</p><blockquote><p><a href="http://www.github.com/kingrongH" title="mygithub" target="_blank" rel="noopener">mygithub</a></p></blockquote><p>后””中的文档为提示文字</p><p>2.参考式：</p><blockquote><p>[mygithub]<a href="http://www.github.com/kingrongH" title="mygithub" target="_blank" rel="noopener">1</a>:<a href="http://www.github.com/kingrongH" target="_blank" rel="noopener">www.github.com/kingrongH</a> “mygithub”</p></blockquote><p>[<strong>注</strong>]：第二行不得出现在区块(引用区块或者代码区块)中，否则无用<br>效果：</p><blockquote><p><a href="http://www.github.com/kingrongH" title="mygithub" target="_blank" rel="noopener">mygithub</a></p></blockquote><h3 id="2-9-图片"><a href="#2-9-图片" class="headerlink" title="2.9 图片"></a>2.9 图片</h3><p>图片的添加和和链接相似只需要在最前面加上一个!即可</p><p>例如：</p><blockquote><p>![mygithub](<a href="https://i.loli.net/2018/08/13/5b71647961dc7.jpg" target="_blank" rel="noopener">https://i.loli.net/2018/08/13/5b71647961dc7.jpg</a> “图片”)</p></blockquote><p>效果：</p><blockquote><p><img src="https://i.loli.net/2018/08/13/5b71647961dc7.jpg" alt="mygithub" title="图片"></p></blockquote><h3 id="2-10-反斜杠"><a href="#2-10-反斜杠" class="headerlink" title="2.10 反斜杠\"></a>2.10 反斜杠\</h3><p>众所周知的转义的作用</p><h3 id="2-11-符号"><a href="#2-11-符号" class="headerlink" title="2.11 符号`"></a>2.11 符号`</h3><p>起到标记的作用，即被标记的文字有深色</p><p>例如：</p><blockquote><p>`略略略略略略`  </p></blockquote><p>效果：</p><p><code>略略略略略略</code></p><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>有一些拓展语法有待了解，比如表格的显示、对齐设置等</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;1-0-关于&quot;&gt;&lt;a href=&quot;#1-0-关于&quot; class=&quot;headerlink&quot; title=&quot;1.0 关于&quot;&gt;&lt;/a&gt;1.0 关于&lt;/h2&gt;&lt;h3 id=&quot;1-1-关于&quot;&gt;&lt;a href=&quot;#1-1-关于&quot; class=&quot;headerlink&quot; titl
+      
+    
+    </summary>
+    
+      <category term="学习" scheme="http://www.kingr.top/categories/%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="MarkDown 学习" scheme="http://www.kingr.top/tags/MarkDown-%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+</feed>
