@@ -3,6 +3,29 @@
   
     
     <entry>
+      <title>dein:deoplete补全只生效一次</title>
+      <link href="/2018/11/12/dein-problem/"/>
+      <url>/2018/11/12/dein-problem/</url>
+      <content type="html"><![CDATA[<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>在使用dein作为我的vim插件管理器之后，经常出现一些我无法解决的问题。</p><p>其中一个就是我使用的deoplete做为我的自动补全的插件，但是这个每次只是在我更改完vim配置之后生效一次，然后退出vim重启之后就失效了。</p><h1 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h1><p>将<code>```````````````</code>if dein#load_sate()<code></code> 和对应的<code>endif</code> 删除了就好了</p><h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p>对自己所使用的东西不熟悉，没有一步一步来去了解如何使用dein就草草将它应用到我的配置上了。以后应当一步步来。</p>]]></content>
+      
+      <categories>
+          
+          <category> 解决问题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> vim </tag>
+            
+            <tag> deoplete </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>arch 不能挂载root(You are now being dropped into an emergency shell)</title>
       <link href="/2018/11/04/arch-cant-mount-root/"/>
       <url>/2018/11/04/arch-cant-mount-root/</url>
@@ -113,9 +136,9 @@
       
         <tags>
             
-            <tag> tensorflow </tag>
-            
             <tag> python </tag>
+            
+            <tag> tensorflow </tag>
             
         </tags>
       
@@ -255,9 +278,9 @@
       
         <tags>
             
-            <tag> tensorflow </tag>
-            
             <tag> python </tag>
+            
+            <tag> tensorflow </tag>
             
             <tag> Manjaro </tag>
             
@@ -276,9 +299,9 @@
             
             <tag> vim </tag>
             
-            <tag> SpaceVim </tag>
-            
             <tag> deoplete </tag>
+            
+            <tag> SpaceVim </tag>
             
         </tags>
       
