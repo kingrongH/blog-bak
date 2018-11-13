@@ -10,4 +10,4 @@ Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
 
-https://www.kingr.top/sitemap.xml
+Sitemap:https://www.kingr.top/sitemap.xml
