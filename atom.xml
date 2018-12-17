@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.kingr.top/"/>
-  <updated>2018-11-15T07:51:22.481Z</updated>
+  <updated>2018-12-17T05:12:31.729Z</updated>
   <id>http://www.kingr.top/</id>
   
   <author>
@@ -15,6 +15,60 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="http://www.kingr.top/2018/12/17/prime-number-javascript/"/>
+    <id>http://www.kingr.top/2018/12/17/prime-number-javascript/</id>
+    <published>2018-12-17T04:50:32.000Z</published>
+    <updated>2018-12-17T05:12:31.729Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h2><p>使用<code>JavaScript</code>判断一个数是否为质数<br>质数即是除了他本身更和<code>1</code>这两个公约数之外没有别的公约数的数。</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre><code>&apos;use strict&apos;;function priN(x){    if (x &lt; 2) return false;    else        for(i=2;i*i&lt;=x;i++){            if(x%i===0) return false;        }return true;}</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>使用的方法即是从<code>2</code> 开始遍历，直到遍历完所有可能的情况为止。如果找到了公约数则返回<code>false</code>，否则返回<code>true</code> 。</p><p><strong>这里有一个值得注意的点是我们的遍历结束点是 <code>i*i&lt;=x</code></strong></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;关于&quot;&gt;&lt;a href=&quot;#关于&quot; class=&quot;headerlink&quot; title=&quot;关于&quot;&gt;&lt;/a&gt;关于&lt;/h2&gt;&lt;p&gt;使用&lt;code&gt;JavaScript&lt;/code&gt;判断一个数是否为质数&lt;br&gt;质数即是除了他本身更和&lt;code&gt;1&lt;/code&gt;这两个公约数
+      
+    
+    </summary>
+    
+      <category term="JavaScript" scheme="http://www.kingr.top/categories/JavaScript/"/>
+    
+    
+      <category term="JavaScript" scheme="http://www.kingr.top/tags/JavaScript/"/>
+    
+      <category term="Algorithm" scheme="http://www.kingr.top/tags/Algorithm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>subprocess的使用测试</title>
+    <link href="http://www.kingr.top/2018/11/23/subprocess-use-test/"/>
+    <id>http://www.kingr.top/2018/11/23/subprocess-use-test/</id>
+    <published>2018-11-23T04:35:56.000Z</published>
+    <updated>2018-11-23T05:26:35.045Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h1><p><code>subprocess</code> 是python的一个可以用来连接到终端执行终端程序的模块，我们可以用它来执行一些终端命令或者执行一些子进程。并且在使用上是十分方便的。</p><p># </p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;关于&quot;&gt;&lt;a href=&quot;#关于&quot; class=&quot;headerlink&quot; title=&quot;关于&quot;&gt;&lt;/a&gt;关于&lt;/h1&gt;&lt;p&gt;&lt;code&gt;subprocess&lt;/code&gt; 是python的一个可以用来连接到终端执行终端程序的模块，我们可以用它来执行一些终端命令或者
+      
+    
+    </summary>
+    
+      <category term="Python" scheme="http://www.kingr.top/categories/Python/"/>
+    
+    
+      <category term="python" scheme="http://www.kingr.top/tags/python/"/>
+    
+      <category term="subprocess" scheme="http://www.kingr.top/tags/subprocess/"/>
+    
+  </entry>
   
   <entry>
     <title>Python播放MP3 总结</title>
@@ -517,31 +571,6 @@
     
     
       <category term="git" scheme="http://www.kingr.top/tags/git/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MarkDown学习记录</title>
-    <link href="http://www.kingr.top/2018/08/14/MarkDown%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/"/>
-    <id>http://www.kingr.top/2018/08/14/MarkDown学习记录/</id>
-    <published>2018-08-14T09:50:20.000Z</published>
-    <updated>2018-08-14T14:01:55.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="1-0-关于"><a href="#1-0-关于" class="headerlink" title="1.0 关于"></a>1.0 关于</h2><h3 id="1-1-关于"><a href="#1-1-关于" class="headerlink" title="1.1 关于"></a>1.1 关于</h3><p>从网络上听说markdown的语法简单到两分钟就可以学会，于是乎就开是作死地在这里写第一篇博文的时候用上了。<br>本人使用SpaceVim写markdown倒是有些违背了一步一步慢慢来的初衷，不过既然是使用编辑器又有何紧要呢。<br>在看别人的文档的时候看得一个牛逼的故事，一个关于辍学的牛逼故事。详情可以google markdown的作者。<br>markdown语法十分的简洁好用，相较于word的复杂段落、字体等的设置来说，的确可以称得上是两分钟学会的语法了。<br>简洁的语法使得写作者更加注重于写作文本的内容，并且同样可以拥有美观的外表。并且像字体的设置对于阅读而言自然是舒服即可，无须种种精细。</p><h3 id="1-2-markdown部分"><a href="#1-2-markdown部分" class="headerlink" title="1.2 markdown部分"></a>1.2 markdown部分</h3><p>  markdown的语法主要分为一下几个部分：<br>  标题<br>  段落<br>  区块引用<br>  代码区块<br>  强调<br>  列表<br>  分割线<br>  链接<br>  图片<br>  反斜杠\<br>  符号’`’  </p><h2 id="2-0-markdown语法"><a href="#2-0-markdown语法" class="headerlink" title="2.0 markdown语法"></a>2.0 markdown语法</h2><h3 id="2-1-标题"><a href="#2-1-标题" class="headerlink" title="2.1 标题"></a>2.1 标题</h3><p>  标题有两种表示方法，私心觉得第二种较为好用。写作时却是第一种显得清晰简洁，预览效果都是一样的。因为第二种所分的级数更多，所以觉得会更加常用。</p><p>  1、=与-</p><p>  文字下的’========’可以表示一级标题(无个数限制)<br>  文字下的’————–’可以表示二级标题(无个数限制)</p><p>  2、‘#’</p><p>  n个’#‘在文字前面可以表示n级标题，最多为6级标题</p><p>效果如下：</p><blockquote><h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1><h2 id="二级标题"><a href="#二级标题" class="headerlink" title="二级标题"></a>二级标题</h2><h1 id="一级标题-1"><a href="#一级标题-1" class="headerlink" title="一级标题"></a>一级标题</h1><h2 id="二级标题-1"><a href="#二级标题-1" class="headerlink" title="二级标题"></a>二级标题</h2><h3 id="三级标题"><a href="#三级标题" class="headerlink" title="三级标题"></a>三级标题</h3><h4 id="四级标题"><a href="#四级标题" class="headerlink" title="四级标题"></a>四级标题</h4><h5 id="五级标题"><a href="#五级标题" class="headerlink" title="五级标题"></a>五级标题</h5><h6 id="六级标题"><a href="#六级标题" class="headerlink" title="六级标题"></a>六级标题</h6></blockquote><h3 id="2-2-段落"><a href="#2-2-段落" class="headerlink" title="2.2 段落"></a>2.2 段落</h3><p>  换行即为段落</p><p>  如果要段内强制换行则在句末加上<b>两个及以上</b>的空格<b>加回车</b>（引用中换行省略回车）</p><h3 id="2-3-区块引用"><a href="#2-3-区块引用" class="headerlink" title="2.3 区块引用"></a>2.3 区块引用</h3><p>在段落的第一行使用 &gt; 符号即可，在引用中使用 &gt;&gt; 还可以表示嵌套   </p><blockquote><p>引用   </p><blockquote><p>引用中引用</p></blockquote></blockquote><h3 id="2-4-代码区块"><a href="#2-4-代码区块" class="headerlink" title="2.4 代码区块"></a>2.4 代码区块</h3><p>  既然markdown的发明者是一名极客肯定少不了代码的引用。<br>  代码区块建立只需要在每行加上<b>4个空格</b> 或者两个<b>制表符</b><br>  需要注意的是在强制换行中无用，如需建立代码区块仍然需要空一行即另起一段。<br>  如下：</p><pre><code>import tesnsorflow as tfimport re</code></pre><h3 id="2-5-强调"><a href="#2-5-强调" class="headerlink" title="2.5 强调"></a>2.5 强调</h3><p>在强调内容的两侧加上*或者_,两侧各加一个表示斜体，两侧各加两个表示斜体<br>另外因为markdown兼容html语法所以如果不限麻烦还可以使用我们熟知的&lt;&gt;中间加b来加粗<br>示例：</p><blockquote><p>  <strong>粗体</strong><br>  <em>斜体</em></p></blockquote><h3 id="2-6-列表"><a href="#2-6-列表" class="headerlink" title="2.6 列表"></a>2.6 列表</h3><p>使用·、+、或-标记无序列表，标记后至少有一个空格</p><blockquote><ul><li>第一项  </li></ul><ul><li>第二项</li></ul><ul><li>第三项</li></ul></blockquote><p>使用数字加上.进行有序标记，同样标记后至少一个空格   </p><blockquote><ol><li>第一</li><li>第二</li><li>第三</li></ol></blockquote><h3 id="2-7-分割线"><a href="#2-7-分割线" class="headerlink" title="2.7 分割线"></a>2.7 分割线</h3><p>使用三个或以上的* 或者使用-或_同样都是三个及以上（使用-需要另外空行哦，因为它还有标题的功能，<br>所以避免使用最好了）<br>例如</p><hr><hr><hr><h3 id="2-8-链接"><a href="#2-8-链接" class="headerlink" title="2.8 链接"></a>2.8 链接</h3><p>链接有两种形式，分别为行内式和参考式</p><p>1.行内式：   </p><blockquote><p>[mygithub](<a href="http://www.github.com/kingrongH" target="_blank" rel="noopener">http://www.github.com/kingrongH</a> “mygithub”)</p></blockquote><p>效果：</p><blockquote><p><a href="http://www.github.com/kingrongH" title="mygithub" target="_blank" rel="noopener">mygithub</a></p></blockquote><p>后””中的文档为提示文字</p><p>2.参考式：</p><blockquote><p>[mygithub]<a href="http://www.github.com/kingrongH" title="mygithub" target="_blank" rel="noopener">1</a>:<a href="http://www.github.com/kingrongH" target="_blank" rel="noopener">www.github.com/kingrongH</a> “mygithub”</p></blockquote><p>[<strong>注</strong>]：第二行不得出现在区块(引用区块或者代码区块)中，否则无用<br>效果：</p><blockquote><p><a href="http://www.github.com/kingrongH" title="mygithub" target="_blank" rel="noopener">mygithub</a></p></blockquote><h3 id="2-9-图片"><a href="#2-9-图片" class="headerlink" title="2.9 图片"></a>2.9 图片</h3><p>图片的添加和和链接相似只需要在最前面加上一个!即可</p><p>例如：</p><blockquote><p>![mygithub](<a href="https://i.loli.net/2018/08/13/5b71647961dc7.jpg" target="_blank" rel="noopener">https://i.loli.net/2018/08/13/5b71647961dc7.jpg</a> “图片”)</p></blockquote><p>效果：</p><blockquote><p><img src="https://i.loli.net/2018/08/13/5b71647961dc7.jpg" alt="mygithub" title="图片"></p></blockquote><h3 id="2-10-反斜杠"><a href="#2-10-反斜杠" class="headerlink" title="2.10 反斜杠\"></a>2.10 反斜杠\</h3><p>众所周知的转义的作用</p><h3 id="2-11-符号"><a href="#2-11-符号" class="headerlink" title="2.11 符号`"></a>2.11 符号`</h3><p>起到标记的作用，即被标记的文字有深色</p><p>例如：</p><blockquote><p>`略略略略略略`  </p></blockquote><p>效果：</p><p><code>略略略略略略</code></p><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>有一些拓展语法有待了解，比如表格的显示、对齐设置等</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h2 id=&quot;1-0-关于&quot;&gt;&lt;a href=&quot;#1-0-关于&quot; class=&quot;headerlink&quot; title=&quot;1.0 关于&quot;&gt;&lt;/a&gt;1.0 关于&lt;/h2&gt;&lt;h3 id=&quot;1-1-关于&quot;&gt;&lt;a href=&quot;#1-1-关于&quot; class=&quot;headerlink&quot; titl
-      
-    
-    </summary>
-    
-      <category term="学习" scheme="http://www.kingr.top/categories/%E5%AD%A6%E4%B9%A0/"/>
-    
-    
-      <category term="MarkDown 学习" scheme="http://www.kingr.top/tags/MarkDown-%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
