@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.kingr.top/"/>
-  <updated>2018-12-17T05:12:31.729Z</updated>
+  <updated>2018-12-17T05:20:56.165Z</updated>
   <id>http://www.kingr.top/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title></title>
+    <title>使用JavaScript来判断质数</title>
     <link href="http://www.kingr.top/2018/12/17/prime-number-javascript/"/>
     <id>http://www.kingr.top/2018/12/17/prime-number-javascript/</id>
     <published>2018-12-17T04:50:32.000Z</published>
-    <updated>2018-12-17T05:12:31.729Z</updated>
+    <updated>2018-12-17T05:20:56.165Z</updated>
     
     <content type="html"><![CDATA[<h2 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h2><p>使用<code>JavaScript</code>判断一个数是否为质数<br>质数即是除了他本身更和<code>1</code>这两个公约数之外没有别的公约数的数。</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre><code>&apos;use strict&apos;;function priN(x){    if (x &lt; 2) return false;    else        for(i=2;i*i&lt;=x;i++){            if(x%i===0) return false;        }return true;}</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>使用的方法即是从<code>2</code> 开始遍历，直到遍历完所有可能的情况为止。如果找到了公约数则返回<code>false</code>，否则返回<code>true</code> 。</p><p><strong>这里有一个值得注意的点是我们的遍历结束点是 <code>i*i&lt;=x</code></strong></p>]]></content>
     
