@@ -100,33 +100,6 @@
   </entry>
   
   <entry>
-    <title>subprocess的使用测试</title>
-    <link href="http://www.kingr.top/2018/11/23/subprocess-use-test/"/>
-    <id>http://www.kingr.top/2018/11/23/subprocess-use-test/</id>
-    <published>2018-11-23T04:35:56.000Z</published>
-    <updated>2018-11-23T05:26:35.045Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h1><p><code>subprocess</code> 是python的一个可以用来连接到终端执行终端程序的模块，我们可以用它来执行一些终端命令或者执行一些子进程。并且在使用上是十分方便的。</p><p># </p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;关于&quot;&gt;&lt;a href=&quot;#关于&quot; class=&quot;headerlink&quot; title=&quot;关于&quot;&gt;&lt;/a&gt;关于&lt;/h1&gt;&lt;p&gt;&lt;code&gt;subprocess&lt;/code&gt; 是python的一个可以用来连接到终端执行终端程序的模块，我们可以用它来执行一些终端命令或者
-      
-    
-    </summary>
-    
-      <category term="Python" scheme="http://www.kingr.top/categories/Python/"/>
-    
-    
-      <category term="python" scheme="http://www.kingr.top/tags/python/"/>
-    
-      <category term="subprocess" scheme="http://www.kingr.top/tags/subprocess/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Python播放MP3 总结</title>
     <link href="http://www.kingr.top/2018/11/15/python-play-mp3/"/>
     <id>http://www.kingr.top/2018/11/15/python-play-mp3/</id>
@@ -575,6 +548,33 @@
       <category term="rime" scheme="http://www.kingr.top/tags/rime/"/>
     
       <category term="fcitx-rime" scheme="http://www.kingr.top/tags/fcitx-rime/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SpaceVim自动折行与自动换行</title>
+    <link href="http://www.kingr.top/2018/08/17/SpaceVim%E8%87%AA%E5%8A%A8%E6%8A%98%E8%A1%8C%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%8D%A2%E8%A1%8C/"/>
+    <id>http://www.kingr.top/2018/08/17/SpaceVim自动折行与自动换行/</id>
+    <published>2018-08-17T12:03:17.000Z</published>
+    <updated>2018-08-21T05:23:41.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h2><p>使用SpaceVim写Markdown总是一段一行写到头，让人很生气。而作为半吊子vim使用者脑子里完全没有关键词，不知道如何去搜索解决这个问题，于是搜了半天的自动换行，完全不得要领。在经过大量的查找之后终于让我找到了，自动换行与自动折行的区别。原来我想要达到的目的叫做自动折行。于是乎记录一下今天的愚蠢。。。</p><h2 id="自动换行与自动折行的区别"><a href="#自动换行与自动折行的区别" class="headerlink" title="自动换行与自动折行的区别"></a>自动换行与自动折行的区别</h2><ul><li><p>自动换行是当你写满多少字数之后会自动加一个回车，然后从下一行开始。</p></li><li><p>自动折行是当你写满窗口的一行之后自动从下一行开始，没有加回车，并且是同属一行的，如图：</p></li></ul><p><img src="https://i.loli.net/2018/08/17/5b76bfda92156.png" alt="自动折行" title="自动折行"></p><p>vim里面设置自动换行是在配置文件中设置<code>set textwidth = 80</code> </p><p>设置自动折行则是<code>set wrap</code> ，取消自动折行<code>set nowrap</code> </p><h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>需要SpaceVim在编辑markdown文件时自动折行，步骤如下：</p><p>1.在 <code>~/.SpaceVim.d/init.toml</code>  [options] 下添加：</p><pre><code>bootstrap_before = &quot;myspacevim#before&quot;</code></pre><p>2.然后新建:</p><p><code>~/.SpaceVim.d/autoload/myspacevim.vim</code></p><p>将下面这行添加到其中即可</p><pre><code>au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown wrap</code></pre><h2 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h2><p>设置了自动折行之后，就无法在插入模式愉悦地通过上下方向键跳到下一行，因为是同属一行的，所以只能通过左右方向键跳到下一行。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;关于&quot;&gt;&lt;a href=&quot;#关于&quot; class=&quot;headerlink&quot; title=&quot;关于&quot;&gt;&lt;/a&gt;关于&lt;/h2&gt;&lt;p&gt;使用SpaceVim写Markdown总是一段一行写到头，让人很生气。而作为半吊子vim使用者脑子里完全没有关键词，不知道如何去搜索解决这个
+      
+    
+    </summary>
+    
+      <category term="解决问题" scheme="http://www.kingr.top/categories/%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98/"/>
+    
+    
+      <category term="vim" scheme="http://www.kingr.top/tags/vim/"/>
+    
+      <category term="SpaceVim" scheme="http://www.kingr.top/tags/SpaceVim/"/>
     
   </entry>
   

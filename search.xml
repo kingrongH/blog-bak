@@ -70,29 +70,6 @@
     </entry>
     
     <entry>
-      <title>subprocess的使用测试</title>
-      <link href="/2018/11/23/subprocess-use-test/"/>
-      <url>/2018/11/23/subprocess-use-test/</url>
-      <content type="html"><![CDATA[<h1 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h1><p><code>subprocess</code> 是python的一个可以用来连接到终端执行终端程序的模块，我们可以用它来执行一些终端命令或者执行一些子进程。并且在使用上是十分方便的。</p><p># </p>]]></content>
-      
-      <categories>
-          
-          <category> Python </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> python </tag>
-            
-            <tag> subprocess </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
       <title>Python播放MP3 总结</title>
       <link href="/2018/11/15/python-play-mp3/"/>
       <url>/2018/11/15/python-play-mp3/</url>
