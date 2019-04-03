@@ -108,25 +108,25 @@
 
 
 
-  <meta name="description" content="问题描述更换python环境后，打开neovim自动补全就失效了。 使用的补全插件：deoplete 开发环境： Pyhton 解决办法这是因为更换了python的环境当前deoplete 补全插件失去了依赖，我的解决办法是 pip insall nvim 重新打开nvim 后补全又回来了，">
-<meta name="keywords" content="deoplete,python,neovim">
+  <meta name="description" content="这只是一篇简单的记录 今天在安装coc-java这个插件之后，遇到一个问题：...java exit with code 13 原因分析因为coc-java在你打开一个java文件之后发现没有jdt会自动下载jdt.ls，但是可能处于种种原因你在下载途中退出了，导致下载的的不完整，所以你以打开java文件就报错误。 这一点我觉得coc应当多做一些提示，避免我们下载中途退出，或者提供一下用户自己下载">
+<meta name="keywords" content="vim,coc,java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="更换python环境后 neovim自动补全失效">
-<meta property="og:url" content="http://www.kingr.top/2018/09/10/nvim补全失效/index.html">
+<meta property="og:title" content="coc_java_exit_with13">
+<meta property="og:url" content="http://www.kingr.top/2019/04/03/coc-java-exit-with13/index.html">
 <meta property="og:site_name" content="Kingrong&#39;s Blog">
-<meta property="og:description" content="问题描述更换python环境后，打开neovim自动补全就失效了。 使用的补全插件：deoplete 开发环境： Pyhton 解决办法这是因为更换了python的环境当前deoplete 补全插件失去了依赖，我的解决办法是 pip insall nvim 重新打开nvim 后补全又回来了，">
+<meta property="og:description" content="这只是一篇简单的记录 今天在安装coc-java这个插件之后，遇到一个问题：...java exit with code 13 原因分析因为coc-java在你打开一个java文件之后发现没有jdt会自动下载jdt.ls，但是可能处于种种原因你在下载途中退出了，导致下载的的不完整，所以你以打开java文件就报错误。 这一点我觉得coc应当多做一些提示，避免我们下载中途退出，或者提供一下用户自己下载">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-09-10T13:56:38.000Z">
+<meta property="og:updated_time" content="2019-04-03T12:14:19.017Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="更换python环境后 neovim自动补全失效">
-<meta name="twitter:description" content="问题描述更换python环境后，打开neovim自动补全就失效了。 使用的补全插件：deoplete 开发环境： Pyhton 解决办法这是因为更换了python的环境当前deoplete 补全插件失去了依赖，我的解决办法是 pip insall nvim 重新打开nvim 后补全又回来了，">
+<meta name="twitter:title" content="coc_java_exit_with13">
+<meta name="twitter:description" content="这只是一篇简单的记录 今天在安装coc-java这个插件之后，遇到一个问题：...java exit with code 13 原因分析因为coc-java在你打开一个java文件之后发现没有jdt会自动下载jdt.ls，但是可能处于种种原因你在下载途中退出了，导致下载的的不完整，所以你以打开java文件就报错误。 这一点我觉得coc应当多做一些提示，避免我们下载中途退出，或者提供一下用户自己下载">
 
 
 
 
 
 
-  <link rel="canonical" href="http://www.kingr.top/2018/09/10/nvim补全失效/"/>
+  <link rel="canonical" href="http://www.kingr.top/2019/04/03/coc-java-exit-with13/"/>
 
 
 
@@ -136,7 +136,7 @@
   };
 </script>
 
-  <title>更换python环境后 neovim自动补全失效 | Kingrong's Blog</title>
+  <title>coc_java_exit_with13 | Kingrong's Blog</title>
   
 
 
@@ -337,7 +337,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.kingr.top/2018/09/10/nvim补全失效/">
+    <link itemprop="mainEntityOfPage" href="http://www.kingr.top/2019/04/03/coc-java-exit-with13/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kingrong">
@@ -354,7 +354,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">更换python环境后 neovim自动补全失效
+          <h1 class="post-title" itemprop="name headline">coc_java_exit_with13
               
             
           </h1>
@@ -379,7 +379,7 @@
                 
               
 
-              <time title="创建时间：2018-09-10 21:49:55 / 修改时间：21:56:38" itemprop="dateCreated datePublished" datetime="2018-09-10T21:49:55+08:00">2018-09-10</time>
+              <time title="创建时间：2019-04-03 19:56:55 / 修改时间：20:14:19" itemprop="dateCreated datePublished" datetime="2019-04-03T19:56:55+08:00">2019-04-03</time>
             
 
             
@@ -435,12 +435,11 @@
       
 
       
-        <h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>更换python环境后，打开neovim自动补全就失效了。</p>
-<p>使用的补全插件：<code>deoplete</code></p>
-<p>开发环境： <code>Pyhton</code></p>
-<h1 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h1><p>这是因为更换了python的环境当前<code>deoplete</code> 补全插件失去了依赖，我的解决办法是</p>
-<pre><code>pip insall nvim
-</code></pre><p>重新打开<code>nvim</code> 后补全又回来了，</p>
+        <p>这只是一篇简单的记录</p>
+<p>今天在安装coc-java这个插件之后，遇到一个问题：<code>...java exit with code 13</code></p>
+<h2 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h2><p>因为<code>coc-java</code>在你打开一个java文件之后发现没有<code>jdt</code>会自动下载<a href="https://github.com/eclipse/eclipse.jdt.ls" target="_blank" rel="noopener">jdt.ls</a>，但是可能处于种种原因你在下载途中退出了，导致下载的的不完整，所以你以打开java文件就报错误。</p>
+<p>这一点我觉得coc应当多做一些提示，避免我们下载中途退出，或者提供一下用户自己下载的方式。</p>
+<h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><p>你只需要删了<code>~/.config/coc/extensions/coc-java-data/</code>下的所有文件，然后打开一个java文件，它提示下载，静静等待它下载完就好了。</p>
 
       
     </div>
@@ -461,11 +460,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/deoplete/" rel="tag"># deoplete</a>
+            <a href="/tags/vim/" rel="tag"># vim</a>
           
-            <a href="/tags/python/" rel="tag"># python</a>
+            <a href="/tags/coc/" rel="tag"># coc</a>
           
-            <a href="/tags/neovim/" rel="tag"># neovim</a>
+            <a href="/tags/java/" rel="tag"># java</a>
           
         </div>
       
@@ -478,8 +477,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/09/04/vimfile问题/" rel="next" title="nvim:Error while reading ShaDa file there is an item at position 270498 that must not be there Missing itemsare for internal uses only">
-                <i class="fa fa-chevron-left"></i> nvim:Error while reading ShaDa file there is an item at position 270498 that must not be there Missing itemsare for internal uses only
+              <a href="/2019/03/04/smallestCommons/" rel="next" title="若干数最小公倍数求法[JavaScript实现]">
+                <i class="fa fa-chevron-left"></i> 若干数最小公倍数求法[JavaScript实现]
               </a>
             
           </div>
@@ -487,10 +486,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/09/12/python-opencv调用摄像头/" rel="prev" title="python-opencv调用摄像头">
-                python-opencv调用摄像头 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -717,7 +712,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#问题描述"><span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决办法"><span class="nav-text">解决办法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#原因分析"><span class="nav-text">原因分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决问题"><span class="nav-text">解决问题</span></a></li></ol></div>
             
 
           </div>
