@@ -377,9 +377,9 @@
     
       <category term="deoplete" scheme="http://www.kingr.top/tags/deoplete/"/>
     
-      <category term="python" scheme="http://www.kingr.top/tags/python/"/>
-    
       <category term="neovim" scheme="http://www.kingr.top/tags/neovim/"/>
+    
+      <category term="python" scheme="http://www.kingr.top/tags/python/"/>
     
   </entry>
   
@@ -517,9 +517,9 @@
     
       <category term="vim" scheme="http://www.kingr.top/tags/vim/"/>
     
-      <category term="deoplete" scheme="http://www.kingr.top/tags/deoplete/"/>
-    
       <category term="SpaceVim" scheme="http://www.kingr.top/tags/SpaceVim/"/>
+    
+      <category term="deoplete" scheme="http://www.kingr.top/tags/deoplete/"/>
     
   </entry>
   

@@ -299,9 +299,9 @@
             
             <tag> deoplete </tag>
             
-            <tag> python </tag>
-            
             <tag> neovim </tag>
+            
+            <tag> python </tag>
             
         </tags>
       
@@ -414,9 +414,9 @@
             
             <tag> vim </tag>
             
-            <tag> deoplete </tag>
-            
             <tag> SpaceVim </tag>
+            
+            <tag> deoplete </tag>
             
         </tags>
       
