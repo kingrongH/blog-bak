@@ -3,7 +3,32 @@
   
     
     <entry>
-      <title>coc_java_exit_with13</title>
+      <title>wps在暗色主题下显示灰色字解决</title>
+      <link href="/2019/04/04/wps-darkTheme-greyFont/"/>
+      <url>/2019/04/04/wps-darkTheme-greyFont/</url>
+      <content type="html"><![CDATA[<p>这是一篇解决问题的记录。<br>wps在使用暗色主题的gonme下一直有一个问题：它的字体颜色总是灰色的。这对我的使用造成了很大的困扰，我每次使用wps编辑文档，都需要先转到亮色的主题下。</p><p>现在终于有了解决的办法。</p><h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>更新最新版本的wps2019版本。</p>]]></content>
+      
+      <categories>
+          
+          <category> 解决问题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> linux </tag>
+            
+            <tag> wps </tag>
+            
+            <tag> dark theme </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>coc-java：java exit with code 13</title>
       <link href="/2019/04/03/coc-java-exit-with13/"/>
       <url>/2019/04/03/coc-java-exit-with13/</url>
       <content type="html"><![CDATA[<p>这只是一篇简单的记录</p><p>今天在安装coc-java这个插件之后，遇到一个问题：<code>...java exit with code 13</code></p><h2 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h2><p>因为<code>coc-java</code>在你打开一个java文件之后发现没有<code>jdt</code>会自动下载<a href="https://github.com/eclipse/eclipse.jdt.ls" target="_blank" rel="noopener">jdt.ls</a>，但是可能处于种种原因你在下载途中退出了，导致下载的的不完整，所以你以打开java文件就报错误。</p><p>这一点我觉得coc应当多做一些提示，避免我们下载中途退出，或者在网站上提供一下用户自己下载的方式。</p><h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><p>你只需要删了<code>~/.config/coc/extensions/coc-java-data/</code>下的所有文件，然后打开一个java文件，它提示下载，静静等待它下载完就好了。</p><p>或者在官网<a href="https://download.eclipse.org/jdtls/snapshots/?d" target="_blank" rel="noopener">eclipse jdt download</a>那一串文件中选择最新的那个下载然后解压内容到<code>~/.config/coc/extensions/coc-java-data/server/</code>中。</p>]]></content>

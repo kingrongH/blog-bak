@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.kingr.top/"/>
-  <updated>2019-04-03T12:51:39.494Z</updated>
+  <updated>2019-04-04T02:09:19.040Z</updated>
   <id>http://www.kingr.top/</id>
   
   <author>
@@ -17,11 +17,42 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>coc_java_exit_with13</title>
+    <title>wps在暗色主题下显示灰色字解决</title>
+    <link href="http://www.kingr.top/2019/04/04/wps-darkTheme-greyFont/"/>
+    <id>http://www.kingr.top/2019/04/04/wps-darkTheme-greyFont/</id>
+    <published>2019-04-04T02:01:36.000Z</published>
+    <updated>2019-04-04T02:09:19.040Z</updated>
+    
+    <content type="html"><![CDATA[<p>这是一篇解决问题的记录。<br>wps在使用暗色主题的gonme下一直有一个问题：它的字体颜色总是灰色的。这对我的使用造成了很大的困扰，我每次使用wps编辑文档，都需要先转到亮色的主题下。</p><p>现在终于有了解决的办法。</p><h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>更新最新版本的wps2019版本。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;这是一篇解决问题的记录。&lt;br&gt;wps在使用暗色主题的gonme下一直有一个问题：它的字体颜色总是灰色的。这对我的使用造成了很大的困扰，我每次使用wps编辑文档，都需要先转到亮色的主题下。&lt;/p&gt;
+&lt;p&gt;现在终于有了解决的办法。&lt;/p&gt;
+&lt;h2 id=&quot;解决办法&quot;&gt;&lt;a h
+      
+    
+    </summary>
+    
+      <category term="解决问题" scheme="http://www.kingr.top/categories/%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98/"/>
+    
+    
+      <category term="linux" scheme="http://www.kingr.top/tags/linux/"/>
+    
+      <category term="wps" scheme="http://www.kingr.top/tags/wps/"/>
+    
+      <category term="dark theme" scheme="http://www.kingr.top/tags/dark-theme/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>coc-java：java exit with code 13</title>
     <link href="http://www.kingr.top/2019/04/03/coc-java-exit-with13/"/>
     <id>http://www.kingr.top/2019/04/03/coc-java-exit-with13/</id>
     <published>2019-04-03T11:56:55.000Z</published>
-    <updated>2019-04-03T12:51:39.494Z</updated>
+    <updated>2019-04-04T02:10:20.470Z</updated>
     
     <content type="html"><![CDATA[<p>这只是一篇简单的记录</p><p>今天在安装coc-java这个插件之后，遇到一个问题：<code>...java exit with code 13</code></p><h2 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h2><p>因为<code>coc-java</code>在你打开一个java文件之后发现没有<code>jdt</code>会自动下载<a href="https://github.com/eclipse/eclipse.jdt.ls" target="_blank" rel="noopener">jdt.ls</a>，但是可能处于种种原因你在下载途中退出了，导致下载的的不完整，所以你以打开java文件就报错误。</p><p>这一点我觉得coc应当多做一些提示，避免我们下载中途退出，或者在网站上提供一下用户自己下载的方式。</p><h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><p>你只需要删了<code>~/.config/coc/extensions/coc-java-data/</code>下的所有文件，然后打开一个java文件，它提示下载，静静等待它下载完就好了。</p><p>或者在官网<a href="https://download.eclipse.org/jdtls/snapshots/?d" target="_blank" rel="noopener">eclipse jdt download</a>那一串文件中选择最新的那个下载然后解压内容到<code>~/.config/coc/extensions/coc-java-data/server/</code>中。</p>]]></content>
     
@@ -549,36 +580,6 @@
       <category term="人工智能" scheme="http://www.kingr.top/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/"/>
     
       <category term="机器学习" scheme="http://www.kingr.top/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>fcitx-rime输入法配置</title>
-    <link href="http://www.kingr.top/2018/08/18/fcitx-rime%E8%BE%93%E5%85%A5%E6%B3%95%E9%85%8D%E7%BD%AE/"/>
-    <id>http://www.kingr.top/2018/08/18/fcitx-rime输入法配置/</id>
-    <published>2018-08-18T04:10:44.000Z</published>
-    <updated>2018-08-21T10:49:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>使用rime输入已经有一段时间，但是很惭愧，一直使用的是默认的配置，配置rime输入法这件事情一直也都在日程上，至今才开始配置。</p><p>对默认的配置有一下两点不满：</p><ul><li>皮肤太丑</li><li>词库不全</li></ul><p>在这一次配置中着重解决以上两个问题。</p><h2 id="配置技巧"><a href="#配置技巧" class="headerlink" title="配置技巧"></a>配置技巧</h2><p>在 <code>~/.config/fcitx/rime/</code> 目录下新建 <code>default.custom.yaml</code> 将你需要更改的配置由<code>default.yaml</code> 复制到其中的 <code>patch:</code> 下，rime会优先考虑补丁(patch)里的设置，如：</p><pre><code>patch:  schema_list:    - schema: luna_pinyin    - schema: luna_pinyin_fluency#    - schema: bopomofo#    - schema: bopomofo_tw #    - schema: cangjie5#    - schema: stroke#    - schema: terra_pinyinmenu/page_size: 6</code></pre><p>具体的某个输入法的设置可以依法炮制，比如新建 <code>luna_pinyin.custom.yaml</code></p><pre><code>patch:  switches:    - name: ascii_mode      reset: 0    states: [ 中文, 西文 ]    - name: full_shape      states: [ 半角, 全角 ]    - name: simplification      reset: 1      states: [ 漢字, 汉字 ]    - name: ascii_punct      states: [ 。，, ．， ] </code></pre><p>这种做法可以让我们在轻松的保存自己的配置，以便进行同步。</p><h2 id="添加皮肤"><a href="#添加皮肤" class="headerlink" title="添加皮肤"></a>添加皮肤</h2><p>因为看着默认的fcitx的皮肤太丑，共有三个选项：<code>dark</code>、<code>default</code>和<code>classic</code>，任何一个都不让人满意。所以在网络上找了许多资料配置皮肤。</p><h3 id="ibus-rime"><a href="#ibus-rime" class="headerlink" title="ibus-rime"></a>ibus-rime</h3><p>ibus-rime的皮肤配置写入如下文件就好</p><p><code>~/.config/ibus/rime/default.custom.yaml</code></p><p>记录一个配置皮肤的网页工具：</p><p>  <code>https://rime.netlify.com/</code></p><h3 id="fcitx-rime"><a href="#fcitx-rime" class="headerlink" title="fcitx-rime"></a>fcitx-rime</h3><p>在fcitx下尝试了很多遍修改配置的方法并不奏效，所以我觉得fcitx的皮肤配置与输入法是分离的，可以调整fcitx的皮肤但是不能调整输入法的皮肤。</p><p>方式：</p><p>下载皮肤配置文件并复制到目录 <code>~/.config/fcitx/skin/</code>下就可以切换了。</p><p>推荐皮肤：</p><ol><li><p><code>fcitx-skin-material</code><br>arch下可以直接使用<code>pacman -S fcitx-skin-material</code>进行安装。</p></li><li><p><code>mantis</code></p></li></ol><pre><code>git clone https://github.com/fcitx/fcitx-artworkcd fcitx-artworkcp -r skin ~/.config/fcitx/</code></pre><h2 id="词库添加"><a href="#词库添加" class="headerlink" title="词库添加"></a>词库添加</h2><p>使用的工具 <code>深蓝词库转换</code>：</p><p><code>https://github.com/studyzy/imewlconverter</code></p><p>下载该工具用wine运行，或者在windows下运行。</p><p>然后下载你所需要的搜狗细胞词库：</p><p>  <code>https://pinyin.sogou.com/dict/cate/index/</code></p><p>导入到 <code>深蓝词库转换</code>然后转换为 <code>Rime输入法</code> 格式。<br>将转换后的内容写在以 <code>***.dict.yaml</code> 命名的文件中，如：</p><pre><code># luna_pinyin# Rime dictionary 计算机# encoding: utf-8---name: luna_pinyin.computerversion: &quot;2018.08.18&quot;sort: by_weightuse_preset_vocabulary: trueimport_tables:  - luna_pinyin  - luna_pinyin.computer...阿姆达尔定律    a mu da er ding lv    1阿帕网    a pa wang    1埃尔布朗基    ai er bu lang ji    1埃尔米特函数    ai er mi te han shu    1埃克特    ai ke te    1</code></pre><p>其中以下部分需要自己添加，乃格式所需不可缺少。                                  </p><pre><code>---name: luna_pinyin.computerversion: &quot;2018.08.18&quot;sort: by_weightuse_preset_vocabulary: trueimport_tables:  - luna_pinyin  - luna_pinyin.computer...</code></pre><p>然后将该文件复制到 <code>~/.config/fcitx/rime/</code> 下，在 <code>luna_pinyin.custom.yaml</code> 中添加以下内容即可</p><pre><code>#添加计算机词库，来自搜狗细胞词库转换而来translator:  dictionary: luna_pinyin.computer</code></pre><p>添加多个词库可以依法炮制，或者将多个词库合并为同一个词库。重新部署，这个时候尝试一下输入词库中的内容，你会发现已经可以了。 </p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h2 id=&quot;由来&quot;&gt;&lt;a href=&quot;#由来&quot; class=&quot;headerlink&quot; title=&quot;由来&quot;&gt;&lt;/a&gt;由来&lt;/h2&gt;&lt;p&gt;使用rime输入已经有一段时间，但是很惭愧，一直使用的是默认的配置，配置rime输入法这件事情一直也都在日程上，至今才开始配置。&lt;/p&gt;
-&lt;
-      
-    
-    </summary>
-    
-      <category term="学习" scheme="http://www.kingr.top/categories/%E5%AD%A6%E4%B9%A0/"/>
-    
-    
-      <category term="linux" scheme="http://www.kingr.top/tags/linux/"/>
-    
-      <category term="rime" scheme="http://www.kingr.top/tags/rime/"/>
-    
-      <category term="fcitx-rime" scheme="http://www.kingr.top/tags/fcitx-rime/"/>
     
   </entry>
   
