@@ -108,24 +108,25 @@
 
 
 
-  <meta name="description" content="念念不忘，必有回响">
-<meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://www.kingr.top/categories/index.html">
+  <meta name="description" content="当我们在chrome的地址栏上输入中文的进行搜索之后，我们敲入的关键词在这个时候被编码成了我们看不懂的一串由%和十六进制数组成的东西。 比如: 中文搜索 被编码成了 %E4%B8%AD%E6%96%87%E6%90%9C%E7%B4%A2 所以如何它是如何编码和解码中文的呢？">
+<meta name="keywords" content="url,decode,nodejs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网址中的中文编码和解码方法">
+<meta property="og:url" content="http://www.kingr.top/2019/04/30/urlDecodeChinese/index.html">
 <meta property="og:site_name" content="Kingrong&#39;s Blog">
-<meta property="og:description" content="念念不忘，必有回响">
+<meta property="og:description" content="当我们在chrome的地址栏上输入中文的进行搜索之后，我们敲入的关键词在这个时候被编码成了我们看不懂的一串由%和十六进制数组成的东西。 比如: 中文搜索 被编码成了 %E4%B8%AD%E6%96%87%E6%90%9C%E7%B4%A2 所以如何它是如何编码和解码中文的呢？">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-08-15T01:30:02.000Z">
+<meta property="og:updated_time" content="2019-04-30T14:33:29.558Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="categories">
-<meta name="twitter:description" content="念念不忘，必有回响">
+<meta name="twitter:title" content="网址中的中文编码和解码方法">
+<meta name="twitter:description" content="当我们在chrome的地址栏上输入中文的进行搜索之后，我们敲入的关键词在这个时候被编码成了我们看不懂的一串由%和十六进制数组成的东西。 比如: 中文搜索 被编码成了 %E4%B8%AD%E6%96%87%E6%90%9C%E7%B4%A2 所以如何它是如何编码和解码中文的呢？">
 
 
 
 
 
 
-  <link rel="canonical" href="http://www.kingr.top/categories/"/>
+  <link rel="canonical" href="http://www.kingr.top/2019/04/30/urlDecodeChinese/"/>
 
 
 
@@ -135,7 +136,7 @@
   };
 </script>
 
-  <title>categories | Kingrong's Blog</title>
+  <title>网址中的中文编码和解码方法 | Kingrong's Blog</title>
   
 
 
@@ -244,7 +245,7 @@
         
         
           
-          <li class="menu-item menu-item-categories menu-item-active">
+          <li class="menu-item menu-item-categories">
     <a href="/categories/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
   </li>
@@ -316,110 +317,225 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.kingr.top/2019/04/30/urlDecodeChinese/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kingrong">
+      <meta itemprop="description" content="念念不忘，必有回响">
+      <meta itemprop="image" content="https://i.loli.net/2018/08/13/5b71647961dc7.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kingrong's Blog">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">categories</h1>
-
-<div class="post-meta">
-  
-  
-
-
-
-</div>
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <div class="category-all-page">
-            <div class="category-all-title">
-                
-                
-                  
-                    
-                  
-                
-                  
-                    
-                  
-                
-                  
-                    
-                  
-                
-                  
-                    
-                  
-                
-                  
-                    
-                  
-                
-                  
-                    
-                  
-                
-                  
-                    
-                  
-                
-                目前共计 7 个分类
-            </div>
-            <div class="category-all">
-              <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/">Algorithm</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Arch/">Arch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/JavaScript/">JavaScript</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shadowsocksr/">Shadowsocksr</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/学习/">学习</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/解决问题/">解决问题</a><span class="category-list-count">9</span></li></ul>
-            </div>
-          </div>
+          <h1 class="post-title" itemprop="name headline">网址中的中文编码和解码方法
+              
+            
+          </h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-30 13:15:57 / 修改时间：22:33:29" itemprop="dateCreated datePublished" datetime="2019-04-30T13:15:57+08:00">2019-04-30</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <p>当我们在chrome的地址栏上输入中文的进行搜索之后，我们敲入的关键词在这个时候被编码成了我们看不懂的一串由<code>%</code>和十六进制数组成的东西。</p>
+<p>比如:</p>
+<pre><code>中文搜索
+</code></pre><p>被编码成了</p>
+<pre><code>%E4%B8%AD%E6%96%87%E6%90%9C%E7%B4%A2
+</code></pre><p>所以如何它是如何编码和解码中文的呢？<br><a id="more"></a></p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>根据阮一峰老师的博客<a href="http://www.ruanyifeng.com/blog/2010/02/url_encoding.html" target="_blank" rel="noopener">关于URL编码</a>，我们得知了以下结论:</p>
+<ul>
+<li>网址路径采用的是UTF-8编码</li>
+<li>查询字符串的编码用的是操作系统默认的编码</li>
+<li><code>GET/POST</code>用的是网页的编码（GB2312或者UTF-8）<ul>
+<li><code>&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html;charset=xxxx&quot;&gt;</code>xxxx是啥就进行什么编码</li>
+</ul>
+</li>
+<li>在AJAX请求中，IE采用的是系统编码(GB2312)，Firefox 总是采用UTF-8</li>
+</ul>
+<p>所有以上的这些结论都是在将中文字符转化为各自的编码集之后在每个字节前加上<code>%</code>得到的结果。</p>
+<p>比如：<code>中文</code>使用utf-8编码得到<code>e4b8ade69687</code>，其中<code>中</code>对应<code>e4b8ad</code>，<code>文</code>对应<code>e69687</code>。在一个字节前加上<code>%</code>就得到了<code>%e4%b8%ad%e6%96%87</code>。</p>
+<p>至于utf-8具体是如何编码的，请参见：<a href="http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html" target="_blank" rel="noopener">阮一峰-字符编码笔记：ASCII，Unicode 和 UTF-8</a>。</p>
+<h2 id="解码方法"><a href="#解码方法" class="headerlink" title="解码方法"></a>解码方法</h2><p>了解了网址中中问编码的原理，我决定尝试一下使用nodejs实现一个网址解码的函数：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">urlDecode</span>(<span class="params">str,charset</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">let</span> bytes = [];</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>; i&lt;str.length;i++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(str[i]===<span class="string">"%"</span>)&#123;</span><br><span class="line">			bytes.push(<span class="built_in">parseInt</span>(str.substring(i+<span class="number">1</span>,i+<span class="number">3</span>),<span class="number">16</span>));</span><br><span class="line">			i = i+<span class="number">2</span>;</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			bytes.push(str.charCodeAt(i));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">let</span> buf = Buffer.from(bytes);</span><br><span class="line">	<span class="keyword">return</span> buf.toString(charset);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>想法自然就是将所有的字节都分离出来，添加为一个数组，将这个数组转为nodejs的二进制数据流Buffer，然后再转为utf-8。<br>这个方式只能解码utf-8的字符了，如果是使用GB2312 编码参见：<a href="https://www.npmjs.com/package/iconv-lite" target="_blank" rel="noopener">iconv-lite</a>。</p>
+<p>以下是该库所支持的编码方式，不仅可用于解码还可以用于编码。</p>
+<blockquote>
+<p>All node.js native encodings: utf8, ucs2 / utf16-le, ascii, binary, base64, hex.<br>Additional unicode encodings: utf16, utf16-be, utf-7, utf-7-imap.<br>All widespread singlebyte encodings: Windows 125x family, ISO-8859 family, IBM/DOS codepages, Macintosh family, KOI8 family, all others supported by iconv library. Aliases like ‘latin1’, ‘us-ascii’ also supporte<br>All widespread multibyte encodings: CP932, CP936, CP949, CP950, GB2312, GBK, GB18030, Big5, Shift_JIS, EUC-JP.</p>
+</blockquote>
+
       
     </div>
-    
-
-
 
     
+
     
     
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/url/" rel="tag"># url</a>
+          
+            <a href="/tags/decode/" rel="tag"># decode</a>
+          
+            <a href="/tags/nodejs/" rel="tag"># nodejs</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/12/js-decode-for-clash/" rel="next" title="JavaScript 解析vmess链接，供clash-linux使用">
+                <i class="fa fa-chevron-left"></i> JavaScript 解析vmess链接，供clash-linux使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
   </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTU0NC8xNjA3MQ=="></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -440,8 +556,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -619,6 +744,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解码方法"><span class="nav-text">解码方法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
         <div class="back-to-top">
@@ -786,6 +927,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
