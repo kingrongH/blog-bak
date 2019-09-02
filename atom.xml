@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.kingr.top/"/>
-  <updated>2019-05-13T09:04:40.648Z</updated>
+  <updated>2019-09-02T03:50:34.469Z</updated>
   <id>http://www.kingr.top/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>尝试rust ffi，rust调用clang</title>
+    <link href="http://www.kingr.top/2019/09/02/rust-ffi-test/"/>
+    <id>http://www.kingr.top/2019/09/02/rust-ffi-test/</id>
+    <published>2019-09-02T02:53:54.000Z</published>
+    <updated>2019-09-02T03:50:34.469Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近试图想用rust做一个小工具，但是rust上目前还没有对应的库，而C语言中有对应的库。想尝试使用这个库，我需要先了解一下rust ffi（Foreign Function Interface）。</p><p>要想将rust的ffi应用到一整个库上，首先我们先从一个文件做起。</p><p>这篇文章就是对rust ffi 一次小小尝试的记录。</p><a id="more"></a><h2 id="编写一个c，并编译为库"><a href="#编写一个c，并编译为库" class="headerlink" title="编写一个c，并编译为库"></a>编写一个c，并编译为库</h2><p>我们在一个新建的rust项目的src目录下，新建一个<code>add.c</code>。</p><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">//src/add.c</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a+b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>在命令行中执行：<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">clang -c add.c -o libadd.a</span><br></pre></td></tr></table></figure></p><p>将我们新建的c文件编译为一个可以被引入的库文件。现在我们<code>src</code>目录下结构就是这样的:</p><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">- src</span><br><span class="line">    - add.c</span><br><span class="line">    - libadd.a</span><br><span class="line">    - main.rs</span><br></pre></td></tr></table></figure><h2 id="编写main-rs"><a href="#编写main-rs" class="headerlink" title="编写main.rs"></a>编写main.rs</h2><p>我们如果想要在<code>main.rs</code>中调用我们在<code>add.c</code>中定义的add函数，我们需要将它引入，并且在<code>unsafe</code>代码块中使用。<br><figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> std::os::raw::c_int;</span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">add</span></span>(a, c_int, b: c_int) -&gt; c_int;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> result = <span class="keyword">unsafe</span> &#123; add(<span class="number">1</span>, <span class="number">2</span>) &#125;;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">"1 + 2 = &#123;&#125;"</span>，result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><h2 id="编译main-rs"><a href="#编译main-rs" class="headerlink" title="编译main.rs"></a>编译main.rs</h2><p>也许这个时候，你会试图想要用<code>cargo run</code>来运行你的代码。但是这是行不通的，会报<code>undefined reference</code>错误。因为cargo并不知道我们，我们需要链接的库文件在哪里。</p><p>试一试这个：<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rustc main.rs -L. -ladd &amp;&amp; ./main</span><br></pre></td></tr></table></figure></p><p>你可以看到输出了：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1 + 2 = 3</span><br></pre></td></tr></table></figure></p><p>我们可以使用<code>rustc --help</code>查看<code>-L</code>和<code>-l</code> flag分别代表着什么。</p><ul><li><code>-L</code> 添加lib搜寻的目录</li><li><code>-l</code> 添加lib</li></ul><h2 id="使用cargo-编译"><a href="#使用cargo-编译" class="headerlink" title="使用cargo 编译"></a>使用cargo 编译</h2><p>想要用<code>cargo</code>编译，需要在项目根目录下新建一个<code>build.rs</code></p><p>cargo 会读取<code>build.rs</code>的输出，来设置我们编译时的配置</p><p>在这里我们最小化的一个main.rs就是长这样的<br><figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="comment">//build.rs</span></span><br><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">"cargo:rustc-link-search=./src"</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">"cargo:rustc-link-lib=add"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>具体更多的可以被<code>cargo</code>识别的配置可以在这里找到：<a href="https://doc.rust-lang.org/cargo/reference/build-scripts.html" target="_blank" rel="noopener">build script</a></p><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul><li><a href="https://s3.amazonaws.com/temp.michaelfbryan.com/linking/index.html" target="_blank" rel="noopener">Linking and Building</a></li><li><a href="https://doc.rust-lang.org/cargo/reference/build-scripts.html" target="_blank" rel="noopener">Build Script</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近试图想用rust做一个小工具，但是rust上目前还没有对应的库，而C语言中有对应的库。想尝试使用这个库，我需要先了解一下rust ffi（Foreign Function Interface）。&lt;/p&gt;
+&lt;p&gt;要想将rust的ffi应用到一整个库上，首先我们先从一个文件做起。&lt;/p&gt;
+&lt;p&gt;这篇文章就是对rust ffi 一次小小尝试的记录。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="rust" scheme="http://www.kingr.top/categories/rust/"/>
+    
+    
+      <category term="rust" scheme="http://www.kingr.top/tags/rust/"/>
+    
+      <category term="ffi" scheme="http://www.kingr.top/tags/ffi/"/>
+    
+  </entry>
   
   <entry>
     <title>你应该试试这个科学上网工具clash-node</title>
@@ -93,9 +119,9 @@
       <category term="JavaScript" scheme="http://www.kingr.top/categories/JavaScript/"/>
     
     
-      <category term="vmess" scheme="http://www.kingr.top/tags/vmess/"/>
-    
       <category term="JavaScript" scheme="http://www.kingr.top/tags/JavaScript/"/>
+    
+      <category term="vmess" scheme="http://www.kingr.top/tags/vmess/"/>
     
       <category term="Clash" scheme="http://www.kingr.top/tags/Clash/"/>
     
@@ -560,35 +586,6 @@
       <category term="nvim" scheme="http://www.kingr.top/tags/nvim/"/>
     
       <category term="vimfile" scheme="http://www.kingr.top/tags/vimfile/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>tensorflow 加载自己的数据</title>
-    <link href="http://www.kingr.top/2018/09/03/load-my-own-data/"/>
-    <id>http://www.kingr.top/2018/09/03/load-my-own-data/</id>
-    <published>2018-09-03T11:29:30.000Z</published>
-    <updated>2018-09-04T08:14:12.000Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h1><p>很多时候我们学习tensorflow或者其他deeplearning的课程的时候，我们都被牵着鼻子走，使用一些捏造出来的数据，苦于不能处理我们自己。所以我们今天来尝试一下怎么加载自己的图片数据，将图片数据转换成我们通常学习的数组数据，便于应用我们学习到的深度学习的知识。</p><p>我们需要使用的库有<code>os</code>、<code>np</code>、<code>cv2</code>、<code>pickle</code> 等。</p><p><img src="https://i.loli.net/2018/09/04/5b8def3e54dd5.png" alt="lib" title="lib"></p><h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><pre><code>import numpy as np import matplotlib.pyplot as pltimport osimport cv2import randomimport pickleDATADIR = &quot;./Datasets/PetImages&quot;CATEGORIES = [&apos;Cat&apos;,&apos;Dog&apos;]IMG_SIZE = 50  #将size设置为50可以识别出物体 又降低了数组大小training_data = []def create_training_data():    for category in CATEGORIES:        path = os.path.join(DATADIR, category) # path to cats or dogs dir          class_num = CATEGORIES.index(category)   #0 is cat , 1 is dog         for  img in os.listdir(path):            try:                img_array = cv2.imread(os.path.join(path,img), cv2.IMREAD_GRAYSCALE)   #将图片数据转换为数组 因为颜色并不影响识别所以采用IMREAD_GRAYSCALE                new_array = cv2.resize(img_array, (IMG_SIZE,IMG_SIZE))                training_data.append([new_array,class_num])            except Exception as e:                passcreate_training_data()random.shuffle(training_data) #将所有数据进行随机排序有助于提高训练识别水平X_temp = []y = []for feature,label in training_data:     #分离图片数据和标签信息    X_temp.append(feature)    y.append(label)X = np.array(X_temp).reshape(-1,IMG_SIZE,IMG_SIZE,1)#保存数据 以供下次调用或者其他程序调用pickle_out = open(&apos;X.pickle&apos;,&quot;wb&quot;)pickle.dump(X,pickle_out)pickle_out.close()pickle_out = open(&apos;y.pickle&apos;,&quot;wb&quot;)pickle.dump(y,pickle_out)pickle_out.close()#加载数据举例pickle_in = open(&quot;X.pickle&quot;,&quot;rb&quot;)X = pickle.load(pickle_in)</code></pre><p><code>来源</code>： <code>[sentdex](https://pythonprogramming.net/loading-custom-data-deep-learning-python-tensorflow-keras/)</code></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;关于&quot;&gt;&lt;a href=&quot;#关于&quot; class=&quot;headerlink&quot; title=&quot;关于&quot;&gt;&lt;/a&gt;关于&lt;/h1&gt;&lt;p&gt;很多时候我们学习tensorflow或者其他deeplearning的课程的时候，我们都被牵着鼻子走，使用一些捏造出来的数据，苦于不能处理我
-      
-    
-    </summary>
-    
-      <category term="学习" scheme="http://www.kingr.top/categories/%E5%AD%A6%E4%B9%A0/"/>
-    
-    
-      <category term="tensorflow" scheme="http://www.kingr.top/tags/tensorflow/"/>
-    
-      <category term="人工智能" scheme="http://www.kingr.top/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/"/>
-    
-      <category term="机器学习" scheme="http://www.kingr.top/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
