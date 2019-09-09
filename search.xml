@@ -33,7 +33,7 @@
       
       <categories>
           
-          <category> rust </category>
+          <category> Rust </category>
           
       </categories>
       
@@ -424,9 +424,9 @@
       
         <tags>
             
-            <tag> python </tag>
-            
             <tag> tensorflow </tag>
+            
+            <tag> python </tag>
             
         </tags>
       
@@ -566,9 +566,9 @@
       
         <tags>
             
-            <tag> python </tag>
-            
             <tag> tensorflow </tag>
+            
+            <tag> python </tag>
             
             <tag> Manjaro </tag>
             
@@ -587,9 +587,9 @@
             
             <tag> vim </tag>
             
-            <tag> SpaceVim </tag>
-            
             <tag> deoplete </tag>
+            
+            <tag> SpaceVim </tag>
             
         </tags>
       
