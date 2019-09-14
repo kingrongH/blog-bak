@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.kingr.top/"/>
-  <updated>2019-09-09T07:49:28.153Z</updated>
+  <updated>2019-09-14T14:06:11.264Z</updated>
   <id>http://www.kingr.top/</id>
   
   <author>
@@ -17,11 +17,38 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Rust 错误处理探索</title>
+    <link href="http://www.kingr.top/2019/09/12/rust-error-handle/"/>
+    <id>http://www.kingr.top/2019/09/12/rust-error-handle/</id>
+    <published>2019-09-12T02:12:59.000Z</published>
+    <updated>2019-09-14T14:06:11.264Z</updated>
+    
+    <content type="html"><![CDATA[<p>从JavaScript，从Java，从Python甚至是从C过来，都会不习惯<em>Rust</em>的错误处理方式。但这不是rust限制了你错误处理的方式。事实上rust提供了很大的自由度来进行错误处理，灵活的方式。</p><p>对于Rust来说，<code>Option</code>和<code>Result</code>很大程度上造成了你在错误处理上的不适感。</p><p>要熟练地使用这些方式并不简单，但当你熟练之后，你应当会十分地enjoy这个过程。</p><p>这篇博客简单记录了一下我最近遇到的错误处理的方式。<br><a id="more"></a></p><h2 id="简单处理"><a href="#简单处理" class="headerlink" title="简单处理"></a>简单处理</h2><ul><li><code>unwrap()</code></li><li><code>expect()</code></li></ul><p>对我来说，最为直接而简单的处理<code>Option</code>和<code>Result</code>的方式就是<code>unwarp()</code>，这种方式给你一种在其他语言中编程的体验，但是总是使用这种方式并不是很好的选择。如果你并不能确定你的代码会得到什么样的结果，那么最好不要在生产环境中使用这种方式。</p><p>但是有一些时候我们可以毫不犹豫地使用这种方式——但是确定这是什么结果的时候。比如说：</p><figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> regex::Regex;</span><br><span class="line"><span class="keyword">let</span> gender_re = Regex::new(<span class="string">r"input\[name='sexs'\]\[value='(.+?)'\]"</span>).unwrap();</span><br></pre></td></tr></table></figure><p>另外我觉得也可以在项目开发和测试过程中使用<code>unwrap()</code>或者<code>expect</code>来处理，来快速看看结果是否符合预期以及获得一些简单的提示。</p><h2 id="高级"><a href="#高级" class="headerlink" title="高级"></a>高级</h2><ul><li><code>ok_or()</code>和<code>map_err()</code></li><li><code>dyn std::error::Error</code></li><li><code>?</code>运算符</li><li>新建错误类型和包装错误</li></ul><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>我非常喜欢像<code>ok_or</code>、<code>map_err</code>等的方式，来转换错误。</p><ul><li><code>ok_or()</code>将<code>Option&lt;T&gt;</code>转换为<code>Result&lt;T, Err&gt;</code>。</li><li><code>map_err()</code>将<code>Result&lt;T, E&gt;</code> 转换为<code>Result&lt;T, F&gt;</code>，即转换为另一个错误类型。</li></ul><p>这两种方式结合自定义错误和<code>?</code>运算符以及自定义的错误可以写出非常简洁的代码。很多时候我们并不喜欢写大段的<code>match</code>，虽然我们很喜欢<code>match</code>语法。</p><p><code>dyn std::error::Error</code> 方式很强大，你给任何一个实现了<code>std::error::Error</code> <em>trait</em>的错误，它都照单全收。</p><figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">some_fn</span></span>(param: <span class="built_in">Result</span>&lt;&amp;<span class="built_in">str</span>, &amp;<span class="built_in">str</span>&gt;) -&gt; <span class="built_in">Result</span>&lt;<span class="built_in">i32</span>, <span class="built_in">Box</span>&lt;dyn std::error::Error&gt;&gt; &#123;</span><br><span class="line">    <span class="keyword">match</span> param &#123;</span><br><span class="line">        <span class="literal">Ok</span>(n) =&gt; n.parse::&lt;<span class="built_in">i32</span>&gt;()?,</span><br><span class="line">        <span class="literal">Err</span>(_e) =&gt; <span class="literal">Ok</span>(<span class="number">0</span>),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>新建一个错误的过程十分明了：</p><ul><li>定义错误</li><li>实现<code>std::fmt::Display</code> trait</li><li>实现<code>std::error::Error</code> trait</li><li>如果需要实现包装错误，实现<code>From</code>trait</li></ul><p>详见<a href="https://doc.rust-lang.org/rust-by-example/error/multiple_error_types/define_error_type.html" target="_blank" rel="noopener">Define an error type</a></p><h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><p>以下代码是我最近一次使用<code>reqwest</code>模拟登录中获取cookie的代码（网址非真实网址）。</p><figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">get_cookie</span></span>() -&gt; <span class="built_in">Result</span>&lt;<span class="built_in">String</span>, LoginError&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> url = <span class="string">"http://www.example.com/example"</span>;</span><br><span class="line">    <span class="keyword">let</span> resp = Client::new().get(url)</span><br><span class="line">        .header(USER_AGENT, <span class="string">"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"</span>)</span><br><span class="line">        .send().map_err(reqwest_result_handle)?;</span><br><span class="line">    <span class="keyword">let</span> set_cookie = resp.headers().get(SET_COOKIE).ok_or(LoginError::NoSetCookie)?; </span><br><span class="line">    <span class="keyword">let</span> set_cookie = (set_cookie.to_str().map_err(|_e| LoginError::Other)?).to_string();</span><br><span class="line">    <span class="keyword">let</span> re = Regex::new(<span class="string">r"PHPSESSID=([\w\d]+?);.*"</span>);</span><br><span class="line">    <span class="keyword">let</span> re_result = re.unwrap().captures(&amp;set_cookie).ok_or(LoginError::NoSessId)?;</span><br><span class="line">    <span class="literal">Ok</span>(re_result[<span class="number">1</span>].to_string())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>其中<code>LoginError</code>是自定义的一个错误枚举，<code>reqwest_result_handle</code>是一个将<em>reqwest</em>的错误转换为<code>LoginError</code>的一个函数。以上我总共用了两次<code>map_err()</code>和两次<code>ok_or()</code>，<code>map_err</code>用来将我在使用<em>reqwest</em>过程中遇到的<code>Error</code>转换为我自定义的<code>LoginError</code>，并使用<code>?</code>直接返回，节省了许多代码；<code>ok_or</code>两次都用在返回的结果是<code>Option&lt;T&gt;</code>的时候，我们不希望草率的用<code>unwrap()</code>来完成这样一个操作，我们新建了两个不同的错误来接受不存在的结果，并使用<code>?</code>直接返回。</p><p>以上两者如果全程使用<code>match</code>语法来操作，那有可能会是一个mess的火葬场，不信你试试。</p><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul><li><a href="https://doc.rust-lang.org/rust-by-example/error/multiple_error_types/define_error_type.html" target="_blank" rel="noopener">Define Error Type</a></li><li><a href="https://doc.rust-lang.org/rust-by-example/error/multiple_error_types/boxing_errors.html" target="_blank" rel="noopener">Boxing Errors</a></li><li><a href="https://doc.rust-lang.org/rust-by-example/error/multiple_error_types/wrap_error.html" target="_blank" rel="noopener">Wrapping Errors</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;从JavaScript，从Java，从Python甚至是从C过来，都会不习惯&lt;em&gt;Rust&lt;/em&gt;的错误处理方式。但这不是rust限制了你错误处理的方式。事实上rust提供了很大的自由度来进行错误处理，灵活的方式。&lt;/p&gt;
+&lt;p&gt;对于Rust来说，&lt;code&gt;Option&lt;/code&gt;和&lt;code&gt;Result&lt;/code&gt;很大程度上造成了你在错误处理上的不适感。&lt;/p&gt;
+&lt;p&gt;要熟练地使用这些方式并不简单，但当你熟练之后，你应当会十分地enjoy这个过程。&lt;/p&gt;
+&lt;p&gt;这篇博客简单记录了一下我最近遇到的错误处理的方式。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="Rust" scheme="http://www.kingr.top/categories/Rust/"/>
+    
+    
+      <category term="rust" scheme="http://www.kingr.top/tags/rust/"/>
+    
+      <category term="error handle" scheme="http://www.kingr.top/tags/error-handle/"/>
+    
+  </entry>
+  
+  <entry>
     <title>编程语言中的异步IO模型</title>
     <link href="http://www.kingr.top/2019/09/09/async-models/"/>
     <id>http://www.kingr.top/2019/09/09/async-models/</id>
     <published>2019-09-09T05:44:39.000Z</published>
-    <updated>2019-09-09T07:49:28.153Z</updated>
+    <updated>2019-09-09T14:08:18.926Z</updated>
     
     <content type="html"><![CDATA[<p>在看先前的拉丁美洲的Rustconf，偶然看到了<em>Without Boats</em>大佬的关于零成本异步IO的介绍。</p><p>在其中学习到一些异步编程模型，在此做一个总结。 </p><p>视频链接：<a href="https://youtu.be/skos4B5x7qE?list=PL85XCvVPmGQjuWUNeFCgl8X2EOC_aAq5N" target="_blank" rel="noopener">Without Boats: Zero-Cost Async IO</a></p><iframe width="889" height="500" src="https://www.youtube.com/embed/skos4B5x7qE?list=PL85XCvVPmGQjuWUNeFCgl8X2EOC_aAq5N" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><a id="more"></a><h2 id="零成本抽象"><a href="#零成本抽象" class="headerlink" title="零成本抽象"></a>零成本抽象</h2><blockquote><p>What you don’t use, you don’t pay for. And further: What you do use, you couldn’t hand code any better.</p></blockquote><p>这是<em>Without Boats</em>在视频里对零成本抽象的介绍。这是由C++发展过来的好东西。我主要有一下两点理解（好吧，就是简单的翻译（逃。。）：</p><ul><li>对于你用不上的东西，它不会对你的程序性能产生影响</li><li>对于需要用上的东西，你不能找到更好的方式使性能更佳</li></ul><p>提出这个定义的人提出了一个很棒的东西。</p><h2 id="语言中的异步编程模型"><a href="#语言中的异步编程模型" class="headerlink" title="语言中的异步编程模型"></a>语言中的异步编程模型</h2><p>每一种异步IO模型都有相应的典型语言的。</p><h3 id="绿色线程模型"><a href="#绿色线程模型" class="headerlink" title="绿色线程模型"></a>绿色线程模型</h3><p>首先介绍绿色线程，这在rust官网的<em>The Book</em>的无畏并发中有设计。Rust官方库中的线程模型是对应的就是OS的线程模型，即1:1，一个OS线程对应的就是一个编程语言的线程，这样换来了Rust中相较于其他编程语言的更小的运行时，意味着更小的开销。不同的编程语言可能有不同的特殊的线程模型，可能是<code>M</code>个绿色线程对应<code>N</code>个OS线程。所以绿色线程就是不同于OS线程的编程语言中的自己的线程实现。</p><p>使用绿色线程来实现异步编程的语言中实现异步的方式就是新创建一个绿色线程，然后在这个绿色线程中执行异步IO代码。</p><p>使用绿色线程实现异步IO的语言有：Java和Go</p><p>这个方式很棒，但是这个方式不属于零成本抽象的范畴。原因是：这个方式需要在语言层面的Runtime增加去调度绿色线程的代码，这意味着即便你的用户不需要用到异步IO功能，他还是需要为此付出代价。</p><h3 id="Future-模型（基于回调）"><a href="#Future-模型（基于回调）" class="headerlink" title="Future 模型（基于回调）"></a><strong>Future</strong> 模型（基于回调）</h3><p>一个<em>future</em>代表着一个还没有准备好的值。</p><p><em>future</em>在JavaScript中有另一个名字<code>Promise</code>，熟悉JavaScript的同学对这个关键词应该不陌生。在JavaScript中我们给每一个Promise都设置一个回调（resolve, reject）。当我们的Promise准备好的时候，会去调用resolve中的代码或者是reject中的代码。这种方式是非常棒的方式。</p><p>在ES2017，JavaScript的作者们将<code>async</code>和<code>await</code>语法实现到了JavaScript中，这简直极大的方便了我们去编写异步的代码。</p><p>通过以上的JavaScript的<code>Promise</code>实现。我们可以知道：</p><ol><li>使用回调方式的<code>Future</code>模型</li><li><code>Future</code>模型可以实现为<code>async</code>和<code>await</code>语法</li></ol><p>这个方式也非常Amazing，但是这种方式同样不属于零成本抽象的范畴。原因是：使用回调的方式并不是使性能最佳的方式，他还可以有更好的实现。</p><h3 id="Rust的异步模型（基于Poll）"><a href="#Rust的异步模型（基于Poll）" class="headerlink" title="Rust的异步模型（基于Poll）"></a><em>Rust</em>的异步模型（基于Poll）</h3><p>基于回调的<code>Future</code>模型大抵是这样的：<br><figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">trait</span> <span class="title">Future</span></span> &#123;</span><br><span class="line">    <span class="class"><span class="keyword">type</span> <span class="title">Output</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">schedule</span></span>&lt;F&gt;(<span class="keyword">self</span>, callback: F)</span><br><span class="line">    <span class="keyword">where</span> F: <span class="built_in">FnOnce</span>(Self::Output);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>基于Poll的<code>Future</code>模型大约长这样：<br><figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">trait</span> <span class="title">Future</span></span> &#123;</span><br><span class="line">    <span class="class"><span class="keyword">type</span> <span class="title">Output</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">poll</span></span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>, waker: &amp;Waker) -&gt; Poll&lt;Self::Output&gt;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Poll</span></span> &#123;</span><br><span class="line">    Ready&lt;T&gt;,</span><br><span class="line">    Pending,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>观察这两者的区别，我们发现基于回调的模型，我们需要在它有返回值之前就给它设置好一个callback，回调函数；而基于Poll的模型，只是返回一个包含数据的枚举，表示自己准备好了（Ready<t>），还是没有准备好（Pending）。</t></p><p>基于Poll的<code>Future</code>模型，给了用户更多的灵活性，但同时意味着，用户必须要做更多的事情。比如，你如果想要得到结果就立即执行相关的代码，你就必须时刻在轮询<code>poll</code>这个函数，当它返回Ready时，对相关的数据（T）执行相关的代码。多数时候你不能在主要的线程中执行轮询，所以我们可能需要一个可以管理绿色线程的运行时，比如说<code>Tokio</code>，所以这个时候，我们又使用到了绿色线程，但这个时候管理绿色线程的运行时，不是语言本身提供的，而是第三方库提供的。当你用不上异步代码时，你也就不会加载这个多余的运行时。</p><p>同样的这个<code>Future</code>模型也可以实现为<code>async</code>和<code>await</code>语法，这是非常棒的，我们期待稳定后的Rust1.39。</p><p>这个模型属于零成本抽象的范畴。原因是：它符合了零成本抽象的两条定义。</p><h2 id="参考连接"><a href="#参考连接" class="headerlink" title="参考连接"></a>参考连接</h2><p><a href="https://boats.gitlab.io/blog/" target="_blank" rel="noopener">Without Boats Blog</a><br><a href="https://rustlang-cn.org/office/rust/book/concurrency/ch16-01-threads.html" target="_blank" rel="noopener">The Book 使用线程同时运行代码</a></p>]]></content>
     
@@ -522,9 +549,9 @@
       <category term="学习" scheme="http://www.kingr.top/categories/%E5%AD%A6%E4%B9%A0/"/>
     
     
-      <category term="tensorflow" scheme="http://www.kingr.top/tags/tensorflow/"/>
-    
       <category term="python" scheme="http://www.kingr.top/tags/python/"/>
+    
+      <category term="tensorflow" scheme="http://www.kingr.top/tags/tensorflow/"/>
     
   </entry>
   
@@ -553,36 +580,6 @@
       <category term="python" scheme="http://www.kingr.top/tags/python/"/>
     
       <category term="opencv" scheme="http://www.kingr.top/tags/opencv/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>更换python环境后 neovim自动补全失效</title>
-    <link href="http://www.kingr.top/2018/09/10/nvim%E8%A1%A5%E5%85%A8%E5%A4%B1%E6%95%88/"/>
-    <id>http://www.kingr.top/2018/09/10/nvim补全失效/</id>
-    <published>2018-09-10T13:49:55.000Z</published>
-    <updated>2018-09-10T13:56:38.000Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>更换python环境后，打开neovim自动补全就失效了。</p><p>使用的补全插件：<code>deoplete</code></p><p>开发环境： <code>Pyhton</code></p><h1 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h1><p>这是因为更换了python的环境当前<code>deoplete</code> 补全插件失去了依赖，我的解决办法是</p><pre><code>pip insall nvim</code></pre><p>重新打开<code>nvim</code> 后补全又回来了，</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h1&gt;&lt;p&gt;更换python环境后，打开neovim自动补全就失效了。&lt;/p&gt;
-&lt;p&gt;使用的补全插件：&lt;code&gt;deoplete&lt;/c
-      
-    
-    </summary>
-    
-      <category term="解决问题" scheme="http://www.kingr.top/categories/%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98/"/>
-    
-    
-      <category term="deoplete" scheme="http://www.kingr.top/tags/deoplete/"/>
-    
-      <category term="python" scheme="http://www.kingr.top/tags/python/"/>
-    
-      <category term="neovim" scheme="http://www.kingr.top/tags/neovim/"/>
     
   </entry>
   

@@ -3,6 +3,29 @@
   
     
     <entry>
+      <title>Rust 错误处理探索</title>
+      <link href="/2019/09/12/rust-error-handle/"/>
+      <url>/2019/09/12/rust-error-handle/</url>
+      <content type="html"><![CDATA[<p>从JavaScript，从Java，从Python甚至是从C过来，都会不习惯<em>Rust</em>的错误处理方式。但这不是rust限制了你错误处理的方式。事实上rust提供了很大的自由度来进行错误处理，灵活的方式。</p><p>对于Rust来说，<code>Option</code>和<code>Result</code>很大程度上造成了你在错误处理上的不适感。</p><p>要熟练地使用这些方式并不简单，但当你熟练之后，你应当会十分地enjoy这个过程。</p><p>这篇博客简单记录了一下我最近遇到的错误处理的方式。<br><a id="more"></a></p><h2 id="简单处理"><a href="#简单处理" class="headerlink" title="简单处理"></a>简单处理</h2><ul><li><code>unwrap()</code></li><li><code>expect()</code></li></ul><p>对我来说，最为直接而简单的处理<code>Option</code>和<code>Result</code>的方式就是<code>unwarp()</code>，这种方式给你一种在其他语言中编程的体验，但是总是使用这种方式并不是很好的选择。如果你并不能确定你的代码会得到什么样的结果，那么最好不要在生产环境中使用这种方式。</p><p>但是有一些时候我们可以毫不犹豫地使用这种方式——但是确定这是什么结果的时候。比如说：</p><figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> regex::Regex;</span><br><span class="line"><span class="keyword">let</span> gender_re = Regex::new(<span class="string">r"input\[name='sexs'\]\[value='(.+?)'\]"</span>).unwrap();</span><br></pre></td></tr></table></figure><p>另外我觉得也可以在项目开发和测试过程中使用<code>unwrap()</code>或者<code>expect</code>来处理，来快速看看结果是否符合预期以及获得一些简单的提示。</p><h2 id="高级"><a href="#高级" class="headerlink" title="高级"></a>高级</h2><ul><li><code>ok_or()</code>和<code>map_err()</code></li><li><code>dyn std::error::Error</code></li><li><code>?</code>运算符</li><li>新建错误类型和包装错误</li></ul><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>我非常喜欢像<code>ok_or</code>、<code>map_err</code>等的方式，来转换错误。</p><ul><li><code>ok_or()</code>将<code>Option&lt;T&gt;</code>转换为<code>Result&lt;T, Err&gt;</code>。</li><li><code>map_err()</code>将<code>Result&lt;T, E&gt;</code> 转换为<code>Result&lt;T, F&gt;</code>，即转换为另一个错误类型。</li></ul><p>这两种方式结合自定义错误和<code>?</code>运算符以及自定义的错误可以写出非常简洁的代码。很多时候我们并不喜欢写大段的<code>match</code>，虽然我们很喜欢<code>match</code>语法。</p><p><code>dyn std::error::Error</code> 方式很强大，你给任何一个实现了<code>std::error::Error</code> <em>trait</em>的错误，它都照单全收。</p><figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">some_fn</span></span>(param: <span class="built_in">Result</span>&lt;&amp;<span class="built_in">str</span>, &amp;<span class="built_in">str</span>&gt;) -&gt; <span class="built_in">Result</span>&lt;<span class="built_in">i32</span>, <span class="built_in">Box</span>&lt;dyn std::error::Error&gt;&gt; &#123;</span><br><span class="line">    <span class="keyword">match</span> param &#123;</span><br><span class="line">        <span class="literal">Ok</span>(n) =&gt; n.parse::&lt;<span class="built_in">i32</span>&gt;()?,</span><br><span class="line">        <span class="literal">Err</span>(_e) =&gt; <span class="literal">Ok</span>(<span class="number">0</span>),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>新建一个错误的过程十分明了：</p><ul><li>定义错误</li><li>实现<code>std::fmt::Display</code> trait</li><li>实现<code>std::error::Error</code> trait</li><li>如果需要实现包装错误，实现<code>From</code>trait</li></ul><p>详见<a href="https://doc.rust-lang.org/rust-by-example/error/multiple_error_types/define_error_type.html" target="_blank" rel="noopener">Define an error type</a></p><h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><p>以下代码是我最近一次使用<code>reqwest</code>模拟登录中获取cookie的代码（网址非真实网址）。</p><figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">get_cookie</span></span>() -&gt; <span class="built_in">Result</span>&lt;<span class="built_in">String</span>, LoginError&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> url = <span class="string">"http://www.example.com/example"</span>;</span><br><span class="line">    <span class="keyword">let</span> resp = Client::new().get(url)</span><br><span class="line">        .header(USER_AGENT, <span class="string">"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"</span>)</span><br><span class="line">        .send().map_err(reqwest_result_handle)?;</span><br><span class="line">    <span class="keyword">let</span> set_cookie = resp.headers().get(SET_COOKIE).ok_or(LoginError::NoSetCookie)?; </span><br><span class="line">    <span class="keyword">let</span> set_cookie = (set_cookie.to_str().map_err(|_e| LoginError::Other)?).to_string();</span><br><span class="line">    <span class="keyword">let</span> re = Regex::new(<span class="string">r"PHPSESSID=([\w\d]+?);.*"</span>);</span><br><span class="line">    <span class="keyword">let</span> re_result = re.unwrap().captures(&amp;set_cookie).ok_or(LoginError::NoSessId)?;</span><br><span class="line">    <span class="literal">Ok</span>(re_result[<span class="number">1</span>].to_string())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>其中<code>LoginError</code>是自定义的一个错误枚举，<code>reqwest_result_handle</code>是一个将<em>reqwest</em>的错误转换为<code>LoginError</code>的一个函数。以上我总共用了两次<code>map_err()</code>和两次<code>ok_or()</code>，<code>map_err</code>用来将我在使用<em>reqwest</em>过程中遇到的<code>Error</code>转换为我自定义的<code>LoginError</code>，并使用<code>?</code>直接返回，节省了许多代码；<code>ok_or</code>两次都用在返回的结果是<code>Option&lt;T&gt;</code>的时候，我们不希望草率的用<code>unwrap()</code>来完成这样一个操作，我们新建了两个不同的错误来接受不存在的结果，并使用<code>?</code>直接返回。</p><p>以上两者如果全程使用<code>match</code>语法来操作，那有可能会是一个mess的火葬场，不信你试试。</p><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul><li><a href="https://doc.rust-lang.org/rust-by-example/error/multiple_error_types/define_error_type.html" target="_blank" rel="noopener">Define Error Type</a></li><li><a href="https://doc.rust-lang.org/rust-by-example/error/multiple_error_types/boxing_errors.html" target="_blank" rel="noopener">Boxing Errors</a></li><li><a href="https://doc.rust-lang.org/rust-by-example/error/multiple_error_types/wrap_error.html" target="_blank" rel="noopener">Wrapping Errors</a></li></ul>]]></content>
+      
+      <categories>
+          
+          <category> Rust </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> rust </tag>
+            
+            <tag> error handle </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>编程语言中的异步IO模型</title>
       <link href="/2019/09/09/async-models/"/>
       <url>/2019/09/09/async-models/</url>
@@ -424,9 +447,9 @@
       
         <tags>
             
-            <tag> tensorflow </tag>
-            
             <tag> python </tag>
+            
+            <tag> tensorflow </tag>
             
         </tags>
       
@@ -566,9 +589,9 @@
       
         <tags>
             
-            <tag> tensorflow </tag>
-            
             <tag> python </tag>
+            
+            <tag> tensorflow </tag>
             
             <tag> Manjaro </tag>
             
@@ -587,9 +610,9 @@
             
             <tag> vim </tag>
             
-            <tag> deoplete </tag>
-            
             <tag> SpaceVim </tag>
+            
+            <tag> deoplete </tag>
             
         </tags>
       

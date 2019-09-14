@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.kingr.top/2019/09/02/rust-ffi-test/</loc>
+    <loc>http://www.kingr.top/2019/09/12/rust-error-handle/</loc>
     
-    <lastmod>2019-09-09T08:15:42.750Z</lastmod>
+    <lastmod>2019-09-14T14:06:11.264Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.kingr.top/2019/09/09/async-models/</loc>
     
-    <lastmod>2019-09-09T07:49:28.153Z</lastmod>
+    <lastmod>2019-09-09T14:08:18.926Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.kingr.top/2019/09/02/rust-ffi-test/</loc>
+    
+    <lastmod>2019-09-09T08:15:42.750Z</lastmod>
     
   </url>
   
